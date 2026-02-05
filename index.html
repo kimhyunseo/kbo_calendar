@@ -5,132 +5,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KBO 프로야구 캘린더</title>
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS (Utility) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FullCalendar Core, DayGrid Plugin CDN -->
+    <!-- FullCalendar Core, DayGrid Plugin -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-    <!-- Pretendard Font -->
-    <link rel="stylesheet" as="style" crossorigin
-        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-    <style>
-        /* FullCalendar의 기본 스타일을 일부 커스텀합니다. */
-        :root {
-            --fc-border-color: #e2e8f0;
-            --fc-daygrid-event-dot-width: 0px;
-            /* Hide default dot */
-        }
-
-        /* 캘린더 셀 높이 확보 및 정렬 */
-        .fc-daygrid-day-frame {
-            min-height: 100px;
-            /* 셀 최소 높이 확보 */
-            display: flex;
-            flex-direction: column;
-        }
-
-        .fc-daygrid-day-events {
-            flex-grow: 1;
-            margin: 0 !important;
-        }
-
-        /* 이벤트 컨테이너 스타일 재정의 */
-        .fc-event {
-            cursor: pointer;
-            background-color: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            margin: 0 !important;
-            height: 100%;
-        }
-
-        .fc-daygrid-event-harness {
-            height: 100%;
-        }
-
-        /* 날짜 숫자 센터링 */
-        .fc-daygrid-day-top {
-            flex-direction: row;
-            justify-content: center !important;
-            padding-top: 4px;
-        }
-
-        .fc-daygrid-day-number {
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 10;
-        }
-
-        /* 이번 달이 아닌 날짜 흐리게 표시 */
-        .fc-day-other .fc-event {
-            opacity: 0.25;
-            /* 마스코트, 뱃지 아주 연하게 */
-        }
-
-        .fc-day-other .bg-red-300 {
-            opacity: 0.4;
-            /* 홈 경기 빨간 원 연하게 (숫자도 같이 연해짐) */
-        }
-
-        .fc-day-other .text-gray-700 {
-            color: #9ca3af;
-            /* 일반 날짜 숫자 회색조 (gray-400) */
-        }
-
-
-        /* 모바일 반응형 스타일 */
-        @media (max-width: 640px) {
-            .fc-daygrid-day-frame {
-                min-height: 70px;
-                /* 모바일에서 높이 축소 */
-            }
-
-            .fc-toolbar-title {
-                font-size: 1.25rem !important;
-                /* 제목 폰트 축소 */
-            }
-
-            .fc-header-toolbar {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-        }
-    </style>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="text-gray-800 p-4 sm:p-6 md:p-8">
+<body class="p-4 sm:p-8 min-h-screen flex flex-col items-center">
 
-    <div class="max-w-6xl mx-auto">
-        <!-- 1. 헤더 및 팀 선택 UI -->
-        <header class="mb-6 flex flex-col sm:flex-row justify-between items-center">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-0">
-                KBO 야구 캘린더
-            </h1>
-            <div class="flex items-center space-x-3">
-                <label for="team-select" class="text-sm font-medium text-gray-700">응원팀 선택:</label>
+    <div class="w-full max-w-5xl">
+        <!-- Header Section -->
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div class="flex flex-col items-start">
+                <span class="text-sm font-bold text-blue-600 tracking-wider mb-1">경기 일정</span>
+                <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">KBO 리그</h1>
+            </div>
+
+            <!-- Team Selector -->
+            <div class="relative group">
                 <select id="team-select"
-                    class="block w-full sm:w-48 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm">
-                    <!-- '전체 구단' 옵션 제거 -->
-                    <!-- 팀 옵션은 스크립트에서 동적으로 추가됩니다. -->
+                    class="appearance-none bg-white border border-gray-200 text-gray-700 py-3 pl-4 pr-10 rounded-xl font-medium shadow-sm hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all cursor-pointer min-w-[200px]">
+                    <!-- Options injected by JS -->
                 </select>
+                <!-- Custom Arrow Icon (Handled by CSS, but strictly forced here for layout) -->
             </div>
         </header>
 
-        <!-- 2. FullCalendar가 렌더링될 컨테이너 -->
-        <main id="calendar-container" class="bg-white p-4 rounded-lg shadow">
+        <!-- Calendar Container -->
+        <main id="calendar-container">
             <div id="calendar"></div>
         </main>
 
-        <!-- 3. 경기 상세 정보가 표시될 영역 -->
-        <footer id="event-details-container" class="mt-6 p-4 bg-white rounded-lg shadow hidden">
-            <h2 class="text-xl font-semibold mb-3 border-b pb-2">경기 상세 정보</h2>
+        <!-- Event Details (Modal or Bottom Sheet style) -->
+        <div id="event-details-container" class="hidden mt-6 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <span class="w-1.5 h-6 bg-blue-600 rounded-full"></span>
+                경기 상세 정보
+            </h2>
             <div id="event-details">
-                <p class="text-gray-500">캘린더에서 경기를 선택하세요.</p>
+                <!-- Details injected by JS -->
             </div>
-        </footer>
+        </div>
     </div>
 
-
-    <script src="js/main.js?v=31"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

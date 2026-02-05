@@ -1,129 +1,243 @@
-/* FullCalendar의 기본 스타일을 일부 커스텀합니다. */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
 :root {
-    --fc-border-color: #f1f5f9;
-    /* Soft slate-100 */
-    --fc-daygrid-event-dot-width: 8px;
-    --fc-today-bg-color: #f8fafc;
-    /* Very soft blue/gray for today */
-    --fc-neutral-bg-color: #ffffff;
+    --primary-color: #111827;
+    /* Gray 900 */
+    --accent-color: #3B82F6;
+    /* Blue 500 */
+    --bg-color: #F9FAFB;
+    /* Gray 50 */
+    --card-bg: #FFFFFF;
+    --text-main: #1F2937;
+    /* Gray 800 */
+    --text-sub: #6B7280;
+    /* Gray 500 */
+    --border-color: #E5E7EB;
+    /* Gray 200 */
+
+    --fc-button-bg-color: transparent;
+    --fc-button-border-color: transparent;
+    --fc-button-hover-bg-color: transparent;
+    /* Changed from #F3F4F6 */
+    --fc-button-hover-border-color: transparent;
+    --fc-button-active-bg-color: #FFFFFF;
+    --fc-button-active-border-color: #E5E7EB;
+    --fc-button-text-color: #4B5563;
+    --fc-button-active-text-color: #111827;
+
+    --fc-border-color: #E5E7EB;
+    --fc-today-bg-color: transparent;
+    /* We custom style today */
 }
 
 body {
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
-    background-color: #f8fafc;
-    /* Slate-50 background */
+    font-family: 'Pretendard', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
 }
 
-/* 캘린더 메인 컨테이너 둥굴게 및 그림자 */
-#calendar {
-    background-color: white;
-    border-radius: 1.5rem;
-    /* rounded-3xl */
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-    /* shadow-md */
-    padding: 1.5rem;
-    overflow: hidden;
-    /* 모서리 둥글게 유지 */
-    border: 1px solid #f1f5f9;
+/* --- Container & Layout --- */
+#calendar-container {
+    background: var(--card-bg);
+    border-radius: 24px;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+    padding: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.fc-event {
-    cursor: pointer;
-    background-color: transparent !important;
-    /* 이벤트 기본 배경 제거 */
-    border: none !important;
-    /* 이벤트 기본 테두리 제거 */
-}
-
-/* 툴바(헤더) 스타일링 */
+/* --- Header Toolbar --- */
 .fc-header-toolbar {
     margin-bottom: 2rem !important;
-    padding: 0 0.5rem;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
 }
 
 .fc-toolbar-title {
     font-size: 1.5rem !important;
-    font-weight: 700 !important;
-    color: #1e293b;
-    /* Slate-800 */
+    font-weight: 800 !important;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
 }
 
-/* 버튼 스타일링 (기본 버튼을 더 모던하고 생동감 있게) */
-.fc-button-primary {
-    background-color: white !important;
-    border: 1px solid #e0e7ff !important;
-    /* Indigo-100 */
-    color: #4f46e5 !important;
-    /* Indigo-600 */
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+/* --- Buttons (Custom Segmented Control Look) --- */
+.fc-button-group {
+    background-color: #F3F4F6;
+    /* Gray 100 */
+    padding: 4px;
+    border-radius: 12px;
+    gap: 0 !important;
+}
+
+.fc-button {
+    border-radius: 8px !important;
+    font-size: 0.875rem !important;
     font-weight: 600 !important;
-    padding: 0.6rem 1.2rem !important;
-    border-radius: 0.75rem !important;
-    /* rounded-xl */
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 6px 16px !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease !important;
+    border: none !important;
+    height: auto !important;
+}
+
+.fc-button-primary:not(:disabled):active,
+.fc-button-primary:not(:disabled).fc-button-active {
+    background-color: white !important;
+    color: var(--primary-color) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.fc-button-primary {
+    background-color: transparent;
+    color: var(--text-sub);
 }
 
 .fc-button-primary:hover {
-    background-color: #eef2ff !important;
-    /* Indigo-50 */
-    border-color: #c7d2fe !important;
-    /* Indigo-200 */
-    color: #4338ca !important;
-    /* Indigo-700 */
+    color: var(--text-main);
+    background: transparent !important;
+    /* Removed gray background */
+}
+
+/* --- Navigation Buttons (< >) --- */
+.fc-prev-button,
+.fc-next-button {
+    background-color: white !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 9999px !important;
+    /* Circle */
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--text-main) !important;
+    margin-right: 8px !important;
+    transition: all 0.2s ease !important;
+}
+
+.fc-next-button {
+    margin-right: 0 !important;
+}
+
+.fc-prev-button:hover,
+.fc-next-button:hover {
+    background-color: white !important;
+    /* Force white, no gray */
+    border-color: #CBD5E1 !important;
+    /* slate-300 */
     transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.06) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-.fc-button-primary:active {
-    transform: translateY(0);
+
+/* Hide Today button distinctively if wanted, or keep it consistent */
+/* Hide Today button distinctively if wanted, or keep it consistent */
+.fc-today-button {
+    background-color: white !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    color: var(--text-main) !important;
+    margin-right: 12px !important;
+    margin-left: 16px !important;
+    /* Added spacing from nav buttons */
+    padding: 0 20px !important;
+    height: 40px !important;
 }
 
-.fc-button-primary:disabled {
-    background-color: #f8fafc !important;
-    border-color: #e2e8f0 !important;
-    color: #94a3b8 !important;
-    /* Slate-400 */
-    box-shadow: none !important;
-    transform: none !important;
+.fc-today-button:hover {
+    background-color: white !important;
+    border-color: #CBD5E1 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* 활성화된 버튼 (현재 뷰) */
-.fc-button-active {
-    background-color: #4f46e5 !important;
-    /* Indigo-600 */
-    border-color: #4f46e5 !important;
-    color: white !important;
-    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2), 0 2px 4px -2px rgba(79, 70, 229, 0.1) !important;
-}
-
-.fc-button-active:hover {
-    background-color: #4338ca !important;
-    /* Indigo-700 */
-    border-color: #4338ca !important;
-}
-
-/* 그리드 테두리 제거 또는 연하게 */
+/* --- Day Grid --- */
 .fc-theme-standard td,
 .fc-theme-standard th {
-    border-color: #f1f5f9 !important;
+    border: 1px solid var(--border-color);
 }
 
-/* 요일 헤더 스타일 */
+/* Hide outer borders for cleaner look */
+.fc-scrollgrid {
+    border: none !important;
+}
+
+.fc-scrollgrid-section>td {
+    border: none !important;
+}
+
+/* Header Cells (MON, TUE...) */
 .fc-col-header-cell-cushion {
-    color: #64748b;
-    /* Slate-500 */
-    font-weight: 600;
-    padding: 1rem 0 !important;
+    padding: 16px 0 !important;
+    color: var(--text-sub);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-/* 커스텀 select 박스 화살표 (Tailwind 기본이 마음에 들지 않을 때) */
-.select-with-arrow {
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M7%2010l5%205l5-5z%22%2F%3E%3C%2Fsvg%3E");
+/* Date Cells */
+.fc-daygrid-day-top {
+    justify-content: center;
+    padding-top: 12px;
+}
+
+.fc-daygrid-day-number {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-main);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+/* Today Cell */
+.fc-day-today .fc-daygrid-day-number {
+    background-color: transparent;
+    color: var(--accent-color);
+    font-weight: 800;
+}
+
+/* Events */
+.fc-daygrid-event {
+    white-space: normal;
+    align-items: center;
+    margin-top: 4px !important;
+}
+
+/* Dropdown Customization */
+select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
     background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 1em 1em;
+    background-size: 1.5em 1.5em;
     padding-right: 2.5rem;
     -webkit-appearance: none;
-    -moz-appearance: none;
     appearance: none;
+}
+
+/* Force remove default FullCalendar hover backgrounds */
+.fc-daygrid-event:hover,
+.fc-event:hover,
+.fc-daygrid-dot-event:hover {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+
+/* Also ensure the cell background itself doesn't shift if specific day hover is active */
+.fc-daygrid-day:hover {
+    background-color: transparent !important;
+}
+
+/* Other Month Styling (Prev/Next Month) */
+.fc-day-other .fc-daygrid-day-frame {
+    opacity: 0.3 !important;
 }
