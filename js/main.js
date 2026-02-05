@@ -3,16 +3,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- [1. 데이터 설계] ---
     const DEFAULT_MASCOT_URL = 'https://placehold.co/32x32?text=NA';
     const kboTeams = {
-        'LG': { name: 'LG 트윈스', mascot: 'assets/images/lg_lucky.png' },
-        'KT': { name: 'KT 위즈', mascot: 'assets/images/kt_ddori.png' },
-        'SSG': { name: 'SSG 랜더스', mascot: 'assets/images/ssg_randy.png' },
-        'NC': { name: 'NC 다이노스', mascot: 'assets/images/nc_dandi.png' },
-        '두산': { name: '두산 베어스', mascot: 'assets/images/doosan_cheolwoong.png' },
-        'KIA': { name: 'KIA 타이거즈', mascot: 'assets/images/kia_hogeol.png' },
-        '롯데': { name: '롯데 자이언츠', mascot: 'assets/images/lotte_pini.png' },
-        '삼성': { name: '삼성 라이온즈', mascot: 'assets/images/samsung_bleo.png' },
-        '한화': { name: '한화 이글스', mascot: 'assets/images/hanwha_suri.png' },
-        '키움': { name: '키움 히어로즈', mascot: 'assets/images/kiwoom_tukdol.png' }
+        'LG': { name: 'LG 트윈스', mascot: 'assets/images/lg.png', slug: 'lg' },
+        'KT': { name: 'KT 위즈', mascot: 'assets/images/kt.png', slug: 'kt' },
+        'SSG': { name: 'SSG 랜더스', mascot: 'assets/images/ssg.png', slug: 'ssg' },
+        'NC': { name: 'NC 다이노스', mascot: 'assets/images/nc.png', slug: 'nc' },
+        '두산': { name: '두산 베어스', mascot: 'assets/images/doosan.png', slug: 'doosan' },
+        'KIA': { name: 'KIA 타이거즈', mascot: 'assets/images/kia.png', slug: 'kia' },
+        '롯데': { name: '롯데 자이언츠', mascot: 'assets/images/lotte.png', slug: 'lotte' },
+        '삼성': { name: '삼성 라이온즈', mascot: 'assets/images/samsung.png', slug: 'samsung' },
+        '한화': { name: '한화 이글스', mascot: 'assets/images/hanwha.png', slug: 'hanwha' },
+        '키움': { name: '키움 히어로즈', mascot: 'assets/images/kiwoom.png', slug: 'kiwoom' }
     };
 
     // DOM 요소 참조
@@ -59,20 +59,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                initialDate: '2026-04-01',
+                height: 'auto', // 높이 자동 조절 (스크롤바 방지)
+                // showNonCurrentDates: true, // (기본값) 이전/다음 달 날짜 표시
+                fixedWeekCount: false, // 이번 달의 주 수에 맞춰 높이 조절 (빈 주 숨김)
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,listWeek'
                 },
                 locale: 'ko',
+                buttonText: {
+                    today: '오늘',
+                    month: '월',
+                    list: '주' // listWeek view maps to 'list'
+                },
+                firstDay: 1, // 월요일부터 시작
                 // events 콜백을 사용하여 필터링된 이벤트를 제공
                 events: function (fetchInfo, successCallback, failureCallback) {
                     successCallback(getFilteredEvents(currentSelectedTeam));
                 },
                 eventDisplay: 'block',
 
-                // --- [UX 개선] eventContent 리팩토링 ---
+                // --- [UX 개선] 날짜 셀 커스텀 (홈경기 표시) ---
+                dayCellContent: function (arg) {
+                    const date = arg.date;
+                    const dayNumber = arg.dayNumberText.replace('일', ''); // '1일' -> '1'
+
+                    // 현재 루프 중인 날짜가 해당 월이 아니면(이전/다음달 날짜) 투명도 처리된 상태로 날짜만 표시 (CSS로 제어하기 위해 제거)
+                    // if (arg.isOther) return; 
+
+                    // 해당 날짜에 선택된 팀의 '홈 경기'가 있는지 확인 (이전/다음달 날짜도 포함)
+                    // 날짜 비교를 위해 YYYY-MM-DD 문자열 생성
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const dateString = `${year}-${month}-${day}`;
+
+                    // allScheduleData는 fetch scope 안에 있으므로 여기서 접근 가능 (closure)
+                    const isHomeGame = allScheduleData.some(game => {
+                        const gameDate = game.start.split('T')[0];
+                        return gameDate === dateString && game.home_team === currentSelectedTeam;
+                    });
+
+                    let html = '';
+                    if (isHomeGame) {
+                        // 홈 경기일 때: 빨간 원 표시 (연하게 변경) + 반응형 크기 조절
+                        html = `
+                            <div class="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 bg-red-300 rounded-full shadow-sm">
+                                <span class="text-gray-900 font-bold text-xs sm:text-sm leading-none pt-0.5">${dayNumber}</span>
+                            </div>`;
+                    } else {
+                        // 원정 경기 또는 경기 없음: 일반 표시
+                        html = `<span class="text-gray-700 font-medium text-xs sm:text-sm p-1 inline-block">${dayNumber}</span>`;
+                    }
+
+                    return { html: html };
+                },
                 eventContent: function (arg) {
                     const event = arg.event.extendedProps;
 
@@ -93,39 +135,54 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     let resultBadgeHtml = '';
-                    let homeIconHtml = '';
 
                     // 1. 승/패/무 뱃지: 점수가 있고, 선택된 팀의 경기인 경우에만 표시
                     const hasScore = typeof event.home_score === 'number' && typeof event.away_score === 'number';
                     if (hasScore) {
                         let result = '';
+                        // '승', '패', '무' 로직 (선택된 팀 기준)
                         if (isHomeTeamSelected) {
-                            if (event.home_score > event.away_score) result = 'W';
-                            else if (event.home_score < event.away_score) result = 'L';
-                            else result = 'D';
+                            if (event.home_score > event.away_score) result = '승';
+                            else if (event.home_score < event.away_score) result = '패';
+                            else result = '무';
                         } else if (isAwayTeamSelected) {
-                            if (event.away_score > event.home_score) result = 'W';
-                            else if (event.away_score < event.home_score) result = 'L';
-                            else result = 'D';
+                            if (event.away_score > event.home_score) result = '승';
+                            else if (event.away_score < event.home_score) result = '패';
+                            else result = '무';
                         }
 
                         if (result) {
-                            const badgeColor = result === 'W' ? 'bg-blue-600' : (result === 'L' ? 'bg-red-600' : 'bg-gray-500');
-                            resultBadgeHtml = `<span class="absolute -top-1.5 -right-1.5 text-white text-[10px] font-bold ${badgeColor} rounded-full w-4 h-4 flex items-center justify-center shadow-md">${result}</span>`;
+                            // 팀 데이터에서 slug 가져오기
+                            // event.home_team, event.away_team은 팀 키('LG', 'KT' 등)
+                            let opponentTeamKey = '';
+                            if (isHomeTeamSelected) opponentTeamKey = event.away_team;
+                            else if (isAwayTeamSelected) opponentTeamKey = event.home_team;
+
+                            const teamSlug = kboTeams[opponentTeamKey]?.slug;
+
+                            if (result === '승') {
+                                // 내 팀 승리 -> 상대팀 패배 -> 상대팀의 _lose 이미지 사용
+                                if (teamSlug) mascotUrl = `assets/images/${teamSlug}_lose.png`;
+                            } else if (result === '패') {
+                                // 내 팀 패배 -> 상대팀 승리 -> 상대팀의 _win 이미지 사용
+                                if (teamSlug) mascotUrl = `assets/images/${teamSlug}_win.png`;
+                            } else {
+                                // 무승부: 땀흘리는 이미지 사용
+                                if (teamSlug) mascotUrl = `assets/images/${teamSlug}_tie.png`;
+                            }
                         }
                     }
 
-                    // 2. 홈 아이콘: 선택된 팀의 홈 경기일 때만 표시
-                    if (isHomeTeamSelected) {
-                        homeIconHtml = `<span class="absolute -bottom-1 -left-1 bg-white/80 backdrop-blur-sm rounded-full w-4 h-4 flex items-center justify-center text-[10px] shadow-md">🏠</span>`;
-                    }
+                    // 2. 홈 뱃지: 삭제됨 (날짜 표시로 대체)
 
                     // 3. 최종 HTML 조합
+                    // flex를 사용하여 마스코트를 정중앙에 배치
+                    // 반응형: 모바일 w-10 h-10, 데스크탑 w-14 h-14 (기존 w-16에서 축소)
+                    // 패딩: 모바일 pb-1, 데스크탑 pb-3 (기존보다 넉넉하게)
                     const innerHtml = `
-                        <div class="relative flex justify-center items-center w-full h-full p-1">
-                            <img src="${mascotUrl}" alt="${altText}" class="w-8 h-8 object-contain" onerror="this.src='${DEFAULT_MASCOT_URL}'">
+                        <div class="relative flex justify-center items-center w-full h-full min-h-[50px] sm:min-h-[60px] pb-1 sm:pb-3">
+                            <img src="${mascotUrl}" alt="${altText}" class="w-10 h-10 sm:w-14 sm:h-14 object-contain filter drop-shadow-sm transition-transform duration-200 hover:scale-110" onerror="this.src='${DEFAULT_MASCOT_URL}'">
                             ${resultBadgeHtml}
-                            ${homeIconHtml}
                         </div>`;
 
                     return { html: innerHtml };
@@ -140,8 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     eventDetailsEl.innerHTML = `
                         <div class="space-y-2 text-sm">
-                            <p><strong class="w-20 inline-block font-semibold">경기 ID:</strong> <span class="text-gray-600">${info.event.id}</span></p>
-                            <p><strong class="w-20 inline-block font-semibold">시작 시간:</strong> <span class="text-gray-600">${new Date(eventData.start).toLocaleString('ko-KR')}</span></p>
+                            <p><strong class="w-20 inline-block font-semibold">시작 시간:</strong> <span class="text-gray-600">${info.event.start.toLocaleString('ko-KR', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })}</span></p>
                         </div>
                         <div class="mt-4 pt-3 border-t border-gray-200">
                             <div class="grid grid-cols-3 items-center text-center gap-2">

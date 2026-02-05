@@ -4,36 +4,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KBO 프로야구 캘린더 (2026년 4월)</title>
+    <title>KBO 프로야구 캘린더</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FullCalendar Core, DayGrid Plugin CDN -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <!-- Pretendard Font -->
+    <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
         /* FullCalendar의 기본 스타일을 일부 커스텀합니다. */
         :root {
             --fc-border-color: #e2e8f0;
-            /* light gray */
-            --fc-daygrid-event-dot-width: 8px;
+            --fc-daygrid-event-dot-width: 0px;
+            /* Hide default dot */
         }
 
+        /* 캘린더 셀 높이 확보 및 정렬 */
+        .fc-daygrid-day-frame {
+            min-height: 100px;
+            /* 셀 최소 높이 확보 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fc-daygrid-day-events {
+            flex-grow: 1;
+            margin: 0 !important;
+        }
+
+        /* 이벤트 컨테이너 스타일 재정의 */
         .fc-event {
             cursor: pointer;
             background-color: transparent !important;
-            /* 이벤트 기본 배경 제거 */
             border: none !important;
-            /* 이벤트 기본 테두리 제거 */
+            box-shadow: none !important;
+            margin: 0 !important;
+            height: 100%;
+        }
+
+        .fc-daygrid-event-harness {
+            height: 100%;
+        }
+
+        /* 날짜 숫자 센터링 */
+        .fc-daygrid-day-top {
+            flex-direction: row;
+            justify-content: center !important;
+            padding-top: 4px;
+        }
+
+        .fc-daygrid-day-number {
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 10;
+        }
+
+        /* 이번 달이 아닌 날짜 흐리게 표시 */
+        .fc-day-other .fc-event {
+            opacity: 0.25;
+            /* 마스코트, 뱃지 아주 연하게 */
+        }
+
+        .fc-day-other .bg-red-300 {
+            opacity: 0.4;
+            /* 홈 경기 빨간 원 연하게 (숫자도 같이 연해짐) */
+        }
+
+        .fc-day-other .text-gray-700 {
+            color: #9ca3af;
+            /* 일반 날짜 숫자 회색조 (gray-400) */
+        }
+
+
+        /* 모바일 반응형 스타일 */
+        @media (max-width: 640px) {
+            .fc-daygrid-day-frame {
+                min-height: 70px;
+                /* 모바일에서 높이 축소 */
+            }
+
+            .fc-toolbar-title {
+                font-size: 1.25rem !important;
+                /* 제목 폰트 축소 */
+            }
+
+            .fc-header-toolbar {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 p-4 sm:p-6 md:p-8">
+<body class="text-gray-800 p-4 sm:p-6 md:p-8">
 
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-6xl mx-auto">
         <!-- 1. 헤더 및 팀 선택 UI -->
         <header class="mb-6 flex flex-col sm:flex-row justify-between items-center">
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-0">
-                2026 KBO 리그 4월 경기 일정
+                KBO 야구 캘린더
             </h1>
             <div class="flex items-center space-x-3">
                 <label for="team-select" class="text-sm font-medium text-gray-700">응원팀 선택:</label>
@@ -59,197 +129,8 @@
         </footer>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
 
-            // --- [1. 데이터 설계] ---
-            const DEFAULT_MASCOT_URL = 'https://placehold.co/32x32?text=NA';
-            const kboTeams = {
-                'LG': { name: 'LG 트윈스', mascot: 'assets/images/lg_lucky.png' },
-                'KT': { name: 'KT 위즈', mascot: 'assets/images/kt_ddori.png' },
-                'SSG': { name: 'SSG 랜더스', mascot: 'assets/images/ssg_randy.png' },
-                'NC': { name: 'NC 다이노스', mascot: 'assets/images/nc_dandi.png' },
-                '두산': { name: '두산 베어스', mascot: 'assets/images/doosan_cheolwoong.png' },
-                'KIA': { name: 'KIA 타이거즈', mascot: 'assets/images/kia_hogeol.png' },
-                '롯데': { name: '롯데 자이언츠', mascot: 'assets/images/lotte_pini.png' },
-                '삼성': { name: '삼성 라이온즈', mascot: 'assets/images/samsung_bleo.png' },
-                '한화': { name: '한화 이글스', mascot: 'assets/images/hanwha_suri.png' },
-                '키움': { name: '키움 히어로즈', mascot: 'assets/images/kiwoom_tukdol.png' }
-            };
-
-            // DOM 요소 참조
-            const calendarEl = document.getElementById('calendar');
-            const teamSelectEl = document.getElementById('team-select');
-            const eventDetailsContainerEl = document.getElementById('event-details-container');
-            const eventDetailsEl = document.getElementById('event-details');
-
-            // --- [전역 상태 관리] 현재 선택된 팀 ---
-            let currentSelectedTeam = '';
-
-            // <select>에 KBO 팀 옵션 추가 (초기 선택 팀 설정)
-            const teamKeys = Object.keys(kboTeams);
-            teamKeys.forEach((teamKey, index) => {
-                const option = document.createElement('option');
-                option.value = teamKey;
-                option.textContent = kboTeams[teamKey].name;
-                teamSelectEl.appendChild(option);
-                if (index === 0) { // 첫 번째 팀을 기본 선택
-                    currentSelectedTeam = teamKey;
-                }
-            });
-            teamSelectEl.value = currentSelectedTeam; // select UI에 초기값 반영
-
-            // schedule.json 파일에서 데이터를 불러와서 캘린더를 초기화합니다.
-            fetch('js/schedule.json')
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
-                .then(fetchedScheduleData => {
-                    const allScheduleData = fetchedScheduleData.map(game => ({
-                        ...game,
-                        home_mascot_url: kboTeams[game.home_team]?.mascot || DEFAULT_MASCOT_URL,
-                        away_mascot_url: kboTeams[game.away_team]?.mascot || DEFAULT_MASCOT_URL
-                    }));
-
-                    // 선택된 팀의 경기만 필터링하는 함수
-                    const getFilteredEvents = (selectedTeam) => {
-                        return allScheduleData.filter(game =>
-                            game.home_team === selectedTeam || game.away_team === selectedTeam
-                        );
-                    };
-
-                    const calendar = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridMonth',
-                        initialDate: '2026-04-01',
-                        headerToolbar: {
-                            left: 'prev,next today',
-                            center: 'title',
-                            right: 'dayGridMonth,listWeek'
-                        },
-                        locale: 'ko',
-                        // events 콜백을 사용하여 필터링된 이벤트를 제공
-                        events: function (fetchInfo, successCallback, failureCallback) {
-                            successCallback(getFilteredEvents(currentSelectedTeam));
-                        },
-                        eventDisplay: 'block',
-
-                        // --- [UX 개선] eventContent 리팩토링 ---
-                        eventContent: function (arg) {
-                            const event = arg.event.extendedProps;
-
-                            const isHomeTeamSelected = event.home_team === currentSelectedTeam;
-                            const isAwayTeamSelected = event.away_team === currentSelectedTeam;
-
-                            let mascotUrl = '';
-                            let altText = '';
-                            // 선택된 팀 기준으로 상대팀 마스코트만 표시
-                            if (isHomeTeamSelected) {
-                                mascotUrl = event.away_mascot_url;
-                                altText = event.away_team;
-                            } else if (isAwayTeamSelected) {
-                                mascotUrl = event.home_mascot_url;
-                                altText = event.home_team;
-                            } else {
-                                // 선택된 팀과 관련 없는 경기는 eventContent에서 표시하지 않음
-                                return false;
-                            }
-
-                            let resultBadgeHtml = '';
-                            let homeIconHtml = '';
-
-                            // 1. 승/패/무 뱃지: 점수가 있고, 특정 팀이 선택된 경우에만 표시 (이제 항상 특정 팀이 선택됨)
-                            const hasScore = typeof event.home_score === 'number' && typeof event.away_score === 'number';
-                            if (hasScore) {
-                                let result = '';
-                                if (isHomeTeamSelected) {
-                                    if (event.home_score > event.away_score) result = 'W';
-                                    else if (event.home_score < event.away_score) result = 'L';
-                                    else result = 'D';
-                                } else if (isAwayTeamSelected) {
-                                    if (event.away_score > event.home_score) result = 'W';
-                                    else if (event.away_score < event.home_score) result = 'L';
-                                    else result = 'D';
-                                }
-
-                                if (result) {
-                                    const badgeColor = result === 'W' ? 'bg-blue-600' : (result === 'L' ? 'bg-red-600' : 'bg-gray-500');
-                                    resultBadgeHtml = `<span class="absolute -top-1.5 -right-1.5 text-white text-[10px] font-bold ${badgeColor} rounded-full w-4 h-4 flex items-center justify-center shadow-md">${result}</span>`;
-                                }
-                            }
-
-                            // 2. 홈 아이콘: 선택된 팀의 홈 경기일 때만 표시
-                            if (isHomeTeamSelected) {
-                                homeIconHtml = `<span class="absolute -bottom-1 -left-1 bg-white/80 backdrop-blur-sm rounded-full w-4 h-4 flex items-center justify-center text-[10px] shadow-md">🏠</span>`;
-                            }
-
-                            // 3. 최종 HTML 조합
-                            const innerHtml = `
-                            <div class="relative flex justify-center items-center w-full h-full p-1">
-                                <img src="${mascotUrl}" alt="${altText}" class="w-8 h-8 object-contain" onerror="this.src='${DEFAULT_MASCOT_URL}'">
-                                ${resultBadgeHtml}
-                                ${homeIconHtml}
-                            </div>`;
-
-                            return { html: innerHtml };
-                        },
-
-                        // --- [UX 개선] 상세 정보 뷰 리팩토링 ---
-                        eventClick: function (info) {
-                            const eventData = info.event.extendedProps;
-                            const homeTeamName = kboTeams[eventData.home_team]?.name || eventData.home_team;
-                            const awayTeamName = kboTeams[eventData.away_team]?.name || eventData.away_team;
-                            const hasScore = typeof eventData.home_score === 'number' && typeof eventData.away_score === 'number';
-
-                            eventDetailsEl.innerHTML = `
-                            <div class="space-y-2 text-sm">
-                                <p><strong class="w-20 inline-block font-semibold">경기 ID:</strong> <span class="text-gray-600">${info.event.id}</span></p>
-                                <p><strong class="w-20 inline-block font-semibold">시작 시간:</strong> <span class="text-gray-600">${new Date(info.event.start).toLocaleString('ko-KR')}</span></p>
-                            </div>
-                            <div class="mt-4 pt-3 border-t">
-                                <div class="grid grid-cols-3 items-center text-center gap-2">
-                                    <!-- 홈팀 정보 -->
-                                    
-                                    <div class="flex flex-col items-center justify-center">
-                                        <img src="${eventData.home_mascot_url}" alt="${homeTeamName}" class="w-16 h-16 object-contain">
-                                        <span class="font-bold text-lg mt-1">${homeTeamName}</span>
-                                        <span class="text-xs text-gray-500">HOME</span>
-                                    </div>
-                                    <!-- 점수 정보 -->
-                                    <div class="flex items-center justify-center space-x-2">
-                                        ${hasScore ? `
-                                            <span class="text-4xl font-bold">${eventData.home_score}</span>
-                                            <span class="text-2xl text-gray-400">:</span>
-                                            <span class="text-4xl font-bold">${eventData.away_score}</span>
-                                        ` : '<span class="text-lg text-gray-400">경기 전</span>'}
-                                    </div>
-                                    <!-- 원정팀 정보 -->
-                                    <div class="flex flex-col items-center justify-center">
-                                        <img src="${eventData.away_mascot_url}" alt="${awayTeamName}" class="w-16 h-16 object-contain">
-                                        <span class="font-bold text-lg mt-1">${awayTeamName}</span>
-                                        <span class="text-xs text-gray-500">AWAY</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                            eventDetailsContainerEl.classList.remove('hidden');
-                        }
-                    });
-
-                    calendar.render();
-
-                    teamSelectEl.addEventListener('change', function () {
-                        currentSelectedTeam = this.value; // 전역 변수 업데이트
-                        calendar.refetchEvents(); // 캘린더 이벤트 재로딩 및 렌더링
-                        eventDetailsContainerEl.classList.add('hidden'); // 상세 정보 창 숨기기
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching schedule data:', error);
-                    calendarEl.innerHTML = '<p class="text-red-500 text-center py-4">경기 일정을 불러오는 데 실패했습니다.</p>';
-                });
-        });
-    </script>
+    <script src="js/main.js?v=31"></script>
 </body>
 
 </html>

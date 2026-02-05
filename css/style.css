@@ -1,17 +1,121 @@
 /* FullCalendar의 기본 스타일을 일부 커스텀합니다. */
 :root {
-    --fc-border-color: #e2e8f0; /* light gray */
+    --fc-border-color: #f1f5f9;
+    /* Soft slate-100 */
     --fc-daygrid-event-dot-width: 8px;
+    --fc-today-bg-color: #f8fafc;
+    /* Very soft blue/gray for today */
+    --fc-neutral-bg-color: #ffffff;
 }
+
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+    background-color: #f8fafc;
+    /* Slate-50 background */
+}
+
+/* 캘린더 메인 컨테이너 둥굴게 및 그림자 */
+#calendar {
+    background-color: white;
+    border-radius: 1.5rem;
+    /* rounded-3xl */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    /* shadow-md */
+    padding: 1.5rem;
+    overflow: hidden;
+    /* 모서리 둥글게 유지 */
+    border: 1px solid #f1f5f9;
+}
+
 .fc-event {
     cursor: pointer;
-    background-color: transparent !important; /* 이벤트 기본 배경 제거 */
-    border: none !important; /* 이벤트 기본 테두리 제거 */
+    background-color: transparent !important;
+    /* 이벤트 기본 배경 제거 */
+    border: none !important;
+    /* 이벤트 기본 테두리 제거 */
 }
-/* SSG 랜더스 경기 특별 스타일 */
-.ssg-game {
-    /* SSG 경기 강조는 이제 사용되지 않으므로 비워둡니다. */
+
+/* 툴바(헤더) 스타일링 */
+.fc-header-toolbar {
+    margin-bottom: 2rem !important;
+    padding: 0 0.5rem;
 }
+
+.fc-toolbar-title {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    color: #1e293b;
+    /* Slate-800 */
+}
+
+/* 버튼 스타일링 (기본 버튼을 더 모던하고 생동감 있게) */
+.fc-button-primary {
+    background-color: white !important;
+    border: 1px solid #e0e7ff !important;
+    /* Indigo-100 */
+    color: #4f46e5 !important;
+    /* Indigo-600 */
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+    font-weight: 600 !important;
+    padding: 0.6rem 1.2rem !important;
+    border-radius: 0.75rem !important;
+    /* rounded-xl */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.fc-button-primary:hover {
+    background-color: #eef2ff !important;
+    /* Indigo-50 */
+    border-color: #c7d2fe !important;
+    /* Indigo-200 */
+    color: #4338ca !important;
+    /* Indigo-700 */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.06) !important;
+}
+
+.fc-button-primary:active {
+    transform: translateY(0);
+}
+
+.fc-button-primary:disabled {
+    background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    color: #94a3b8 !important;
+    /* Slate-400 */
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/* 활성화된 버튼 (현재 뷰) */
+.fc-button-active {
+    background-color: #4f46e5 !important;
+    /* Indigo-600 */
+    border-color: #4f46e5 !important;
+    color: white !important;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2), 0 2px 4px -2px rgba(79, 70, 229, 0.1) !important;
+}
+
+.fc-button-active:hover {
+    background-color: #4338ca !important;
+    /* Indigo-700 */
+    border-color: #4338ca !important;
+}
+
+/* 그리드 테두리 제거 또는 연하게 */
+.fc-theme-standard td,
+.fc-theme-standard th {
+    border-color: #f1f5f9 !important;
+}
+
+/* 요일 헤더 스타일 */
+.fc-col-header-cell-cushion {
+    color: #64748b;
+    /* Slate-500 */
+    font-weight: 600;
+    padding: 1rem 0 !important;
+}
+
 /* 커스텀 select 박스 화살표 (Tailwind 기본이 마음에 들지 않을 때) */
 .select-with-arrow {
     background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M7%2010l5%205l5-5z%22%2F%3E%3C%2Fsvg%3E");
