@@ -88,6 +88,12 @@ export function createEventContent(arg, currentSelectedTeam) {
             if (teamSlug) mascotUrl = `assets/images/${teamSlug}_tie.png`;
             badgeHtml = `<span class="mt-1 bg-slate-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">무승부</span>`;
         }
+    } else {
+        // No score yet (Future game) -> Show Time Badge
+        const timeString = arg.event.start.toLocaleTimeString('ko-KR', {
+            hour: '2-digit', minute: '2-digit', hour12: false
+        });
+        badgeHtml = `<span class="mt-1 bg-gray-100 text-gray-500 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10 border border-gray-200">${timeString}</span>`;
     }
 
     return {
