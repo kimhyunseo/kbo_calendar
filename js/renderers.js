@@ -93,7 +93,7 @@ export function createEventContent(arg, currentSelectedTeam) {
     return {
         html: `
         <div class="relative flex flex-col items-center justify-center w-full h-full pb-2 hover:scale-105 transition-transform duration-200">
-             <img src="${mascotUrl}" class="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-sm" alt="${altText}" onerror="this.src='${DEFAULT_MASCOT_URL}'">
+             <img src="${mascotUrl}" class="w-10 h-10 sm:w-16 sm:h-16 object-contain drop-shadow-sm" alt="${altText}" onerror="this.src='${DEFAULT_MASCOT_URL}'">
              ${badgeHtml}
         </div>
         `

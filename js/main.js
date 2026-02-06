@@ -12,6 +12,39 @@ document.addEventListener('DOMContentLoaded', function () {
     const eventDetailsContainerEl = document.getElementById('event-details-container');
     const eventDetailsEl = document.getElementById('event-details');
 
+    // Modal Elements
+    const infoBtn = document.getElementById('info-btn');
+    const infoModal = document.getElementById('info-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const infoModalContent = document.getElementById('info-modal-content');
+
+    // --- Modal Logic ---
+    const openModal = () => {
+        infoModal.classList.remove('hidden');
+        // Small delay to allow display:block to apply before opacity transition
+        setTimeout(() => {
+            infoModal.classList.remove('opacity-0');
+            infoModalContent.classList.remove('scale-95');
+            infoModalContent.classList.add('scale-100');
+        }, 10);
+    };
+
+    const closeModal = () => {
+        infoModal.classList.add('opacity-0');
+        infoModalContent.classList.remove('scale-100');
+        infoModalContent.classList.add('scale-95');
+        setTimeout(() => {
+            infoModal.classList.add('hidden');
+        }, 300); // Match transition duration
+    };
+
+    infoBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    // Close on backdrop click
+    infoModal.addEventListener('click', (e) => {
+        if (e.target === infoModal) closeModal();
+    });
+
     // State
     let currentSelectedTeam = '';
 
