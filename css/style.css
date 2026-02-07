@@ -241,3 +241,56 @@ select {
 .fc-day-other .fc-daygrid-day-frame {
     opacity: 0.3 !important;
 }
+
+/* --- Mobile Responsive Fixes --- */
+@media (max-width: 640px) {
+    .fc-header-toolbar {
+        flex-direction: column !important;
+        gap: 16px !important;
+        margin-bottom: 24px !important;
+    }
+
+    /* Force Reorder: Title (2) -> Top, Nav (1) -> Middle, View (3) -> Bottom 
+       Or maybe Nav row, Title row? No, Title usually best on top or standard 
+       stack logic: 1, 2, 3. 
+       Let's try Title on top for clear context.
+    */
+    .fc-header-toolbar>.fc-toolbar-chunk:nth-child(2) {
+        order: -1;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 8px;
+    }
+
+    .fc-header-toolbar>.fc-toolbar-chunk:nth-child(1),
+    .fc-header-toolbar>.fc-toolbar-chunk:nth-child(3) {
+        order: 0;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .fc-toolbar-title {
+        font-size: 1.5rem !important;
+        /* Slightly smaller than desktop but readable */
+    }
+
+    /* Navigation Buttons */
+    .fc-prev-button,
+    .fc-next-button {
+        width: 36px !important;
+        height: 36px !important;
+    }
+
+    .fc-today-button {
+        height: 36px !important;
+        font-size: 0.85rem !important;
+        margin-left: 8px !important;
+    }
+
+    .fc-button {
+        padding: 4px 12px !important;
+        font-size: 0.85rem !important;
+    }
+}

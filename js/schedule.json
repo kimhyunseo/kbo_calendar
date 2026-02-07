@@ -1,5 +1,125 @@
 [
     {
+        "id": "20260328_LG_KT",
+        "start": "2026-03-28T14:00:00",
+        "home_team": "LG",
+        "away_team": "KT",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260328_SSG_KA",
+        "start": "2026-03-28T14:00:00",
+        "home_team": "SSG",
+        "away_team": "KIA",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260328_SS_LT",
+        "start": "2026-03-28T14:00:00",
+        "home_team": "삼성",
+        "away_team": "롯데",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260328_NC_DS",
+        "start": "2026-03-28T14:00:00",
+        "home_team": "NC",
+        "away_team": "두산",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260328_HW_KW",
+        "start": "2026-03-28T14:00:00",
+        "home_team": "한화",
+        "away_team": "키움",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260329_LG_KT",
+        "start": "2026-03-29T14:00:00",
+        "home_team": "LG",
+        "away_team": "KT",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260329_SSG_KA",
+        "start": "2026-03-29T14:00:00",
+        "home_team": "SSG",
+        "away_team": "KIA",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260329_SS_LT",
+        "start": "2026-03-29T14:00:00",
+        "home_team": "삼성",
+        "away_team": "롯데",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260329_NC_DS",
+        "start": "2026-03-29T14:00:00",
+        "home_team": "NC",
+        "away_team": "두산",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260329_HW_KW",
+        "start": "2026-03-29T14:00:00",
+        "home_team": "한화",
+        "away_team": "키움",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260331_LG_KA",
+        "start": "2026-03-31T18:30:00",
+        "home_team": "LG",
+        "away_team": "KIA",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260331_SSG_KW",
+        "start": "2026-03-31T18:30:00",
+        "home_team": "SSG",
+        "away_team": "키움",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260331_SS_DS",
+        "start": "2026-03-31T18:30:00",
+        "home_team": "삼성",
+        "away_team": "두산",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260331_NC_LT",
+        "start": "2026-03-31T18:30:00",
+        "home_team": "NC",
+        "away_team": "롯데",
+        "home_score": null,
+        "away_score": null
+    },
+    {
+        "id": "20260331_HW_KT",
+        "start": "2026-03-31T18:30:00",
+        "home_team": "한화",
+        "away_team": "KT",
+        "home_score": null,
+        "away_score": null
+    },
+    {
         "id": "20260401_LG_KA",
         "start": "2026-04-01T18:30:00",
         "home_team": "LG",
