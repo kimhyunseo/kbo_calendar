@@ -245,30 +245,36 @@ select {
 /* --- Mobile Responsive Fixes --- */
 @media (max-width: 640px) {
     .fc-header-toolbar {
-        flex-direction: column !important;
-        gap: 16px !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
         margin-bottom: 24px !important;
     }
 
-    /* Force Reorder: Title (2) -> Top, Nav (1) -> Middle, View (3) -> Bottom 
-       Or maybe Nav row, Title row? No, Title usually best on top or standard 
-       stack logic: 1, 2, 3. 
-       Let's try Title on top for clear context.
-    */
+    /* Title: Top, Centered, Full Width */
     .fc-header-toolbar>.fc-toolbar-chunk:nth-child(2) {
         order: -1;
         width: 100%;
         display: flex;
         justify-content: center;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
     }
 
+    /* Left & Right Button Groups: Share the row below */
     .fc-header-toolbar>.fc-toolbar-chunk:nth-child(1),
     .fc-header-toolbar>.fc-toolbar-chunk:nth-child(3) {
         order: 0;
         display: flex;
-        justify-content: center;
-        width: 100%;
+        width: auto !important;
+    }
+
+    /* Align left chunk to start, right chunk to end (default flex behavior for space-between) */
+    .fc-header-toolbar>.fc-toolbar-chunk:nth-child(1) {
+        justify-content: flex-start;
+    }
+
+    .fc-header-toolbar>.fc-toolbar-chunk:nth-child(3) {
+        justify-content: flex-end;
     }
 
     .fc-toolbar-title {

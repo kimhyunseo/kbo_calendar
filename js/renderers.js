@@ -93,7 +93,7 @@ export function createEventContent(arg, currentSelectedTeam) {
         const timeString = arg.event.start.toLocaleTimeString('ko-KR', {
             hour: '2-digit', minute: '2-digit', hour12: false
         });
-        badgeHtml = `<span class="mt-1 bg-gray-100 text-gray-500 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10 border border-gray-200">${timeString}</span>`;
+        badgeHtml = `<span class="mt-0.5 bg-gray-100 text-gray-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm z-10 border border-gray-200">${timeString}</span>`;
     }
 
     return {
