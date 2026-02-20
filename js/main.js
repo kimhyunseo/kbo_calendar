@@ -1,5 +1,5 @@
 import { DEFAULT_MASCOT_URL, KBO_TEAMS } from './constants.js';
-import { createDayCellContent, createEventContent, generateEventDetailsHtml } from './renderers.js';
+import { createDayCellContent, createEventContent, generateEventDetailsHtml, generateRankingsHtml } from './renderers.js';
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -54,6 +54,101 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target === settingsModal) closeSettings();
     });
 
+    // --- [Rankings Modal Logic] ---
+    const rankingsBtn = document.getElementById('rankings-btn');
+    const rankingsModal = document.getElementById('rankings-modal');
+    const closeRankingsBtn = document.getElementById('close-rankings-btn');
+    const rankingsModalContent = document.getElementById('rankings-modal-content');
+    const rankingsTbody = document.getElementById('rankings-tbody');
+
+    let isRankingsLoaded = false;
+    let rankingsDataCache = null;
+    let currentRankingsYear = '2026'; // Default selected year
+
+    const tabBtns = document.querySelectorAll('.rankings-tab-btn');
+
+    const updateTabStyles = () => {
+        tabBtns.forEach(btn => {
+            if (btn.dataset.year === currentRankingsYear) {
+                btn.className = 'rankings-tab-btn px-4 py-1.5 rounded-full text-sm font-bold bg-gray-900 text-white shadow-sm transition-all';
+            } else {
+                btn.className = 'rankings-tab-btn px-4 py-1.5 rounded-full text-sm font-medium text-gray-500 hover:bg-gray-100 transition-all';
+            }
+        });
+    };
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            currentRankingsYear = e.currentTarget.dataset.year;
+            updateTabStyles();
+            renderRankingsTable();
+        });
+    });
+
+    const renderRankingsTable = () => {
+        if (rankingsDataCache) {
+            const yearData = rankingsDataCache[currentRankingsYear] || [];
+            rankingsTbody.innerHTML = generateRankingsHtml(yearData, currentSelectedTeam);
+        }
+    };
+
+    const loadRankingsData = () => {
+        if (isRankingsLoaded && rankingsDataCache) return Promise.resolve();
+
+        // Show loading state
+        rankingsTbody.innerHTML = `<tr><td colspan="9" class="py-8 text-gray-400"><div class="animate-pulse flex flex-col items-center justify-center"><div class="w-8 h-8 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mb-4"></div>데이터를 불러오는 중입니다...</div></td></tr>`;
+
+        return fetch('./js/rankings.json')
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load rankings data');
+                return response.json();
+            })
+            .then(data => {
+                rankingsDataCache = data;
+                isRankingsLoaded = true;
+                renderRankingsTable();
+            })
+            .catch(error => {
+                console.error('Error fetching rankings:', error);
+                rankingsTbody.innerHTML = `<tr><td colspan="9" class="py-8 text-red-400">순위 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</td></tr>`;
+            });
+    };
+
+    const openRankings = () => {
+        rankingsModal.classList.remove('hidden');
+        setTimeout(() => {
+            rankingsModal.classList.remove('opacity-0');
+            rankingsModalContent.classList.remove('scale-95');
+            rankingsModalContent.classList.add('scale-100');
+        }, 10);
+
+        loadRankingsData();
+    };
+
+    const closeRankings = () => {
+        rankingsModal.classList.add('opacity-0');
+        rankingsModalContent.classList.remove('scale-100');
+        rankingsModalContent.classList.add('scale-95');
+        setTimeout(() => {
+            rankingsModal.classList.add('hidden');
+        }, 300);
+    };
+
+    rankingsBtn.addEventListener('click', openRankings);
+    closeRankingsBtn.addEventListener('click', closeRankings);
+    rankingsModal.addEventListener('click', (e) => {
+        if (e.target === rankingsModal) closeRankings();
+    });
+
+    // Refresh Btn
+    const refreshRankingsBtn = document.getElementById('refresh-rankings-btn');
+    if (refreshRankingsBtn) {
+        refreshRankingsBtn.addEventListener('click', () => {
+            isRankingsLoaded = false;
+            loadRankingsData();
+        });
+    }
+
     // Helper for Icons
     const updateNavIcons = () => {
         const prevBtn = document.querySelector('.fc-prev-button');
@@ -88,7 +183,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     toggleExhibition.addEventListener('change', (e) => {
         appSettings.showExhibition = e.target.checked;
-        if (calendar) calendar.refetchEvents();
+        if (calendar) {
+            calendar.render();
+            updateNavIcons();
+        }
     });
 
     toggleResult.addEventListener('change', (e) => {
@@ -182,6 +280,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 currentSelectedTeam = this.value;
                 calendar.refetchEvents();
                 eventDetailsContainerEl.classList.add('hidden');
+
+                // 순위표가 캐싱되어 있다면(모달이 한 번이라도 열렸다면), 새로운 하이라이팅을 위해 리렌더링
+                if (rankingsDataCache) {
+                    renderRankingsTable();
+                }
             });
         })
         .catch(error => {

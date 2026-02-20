@@ -5,13 +5,15 @@ import json
 import os
 import argparse
 import sys
+import requests
 
 # -----------------------------
 # 1. Configuration & Constants
 # -----------------------------
 
-# Path to the JSON file
+# Path to the JSON files
 SCHEDULE_FILE_PATH = os.path.join("js", "schedule.json")
+RANKINGS_FILE_PATH = os.path.join("js", "rankings.json")
 
 # Use webdriver_manager to automatically handle driver
 from selenium.webdriver.chrome.service import Service
@@ -244,6 +246,100 @@ def save_schedule(data):
     except Exception as e:
         print(f"❌ Failed to save schedule: {e}")
 
+def update_rankings(target_year_str):
+    print(f"🏆 Fetching KBO Rankings for {target_year_str}...")
+    url = "https://www.koreabaseball.com/Record/TeamRank/TeamRankDaily.aspx"
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    
+    from io import StringIO
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        dfs = pd.read_html(StringIO(response.text))
+        
+        if not dfs:
+            print("❌ No ranking table found.")
+            return
+
+        df = dfs[0]
+        
+        # Parse logic
+        new_rankings = []
+        for _, row in df.iterrows():
+            raw_team = str(row["팀명"]).strip()
+            team_key = get_team_key(raw_team)
+            
+            try:
+                rank = int(row["순위"])
+            except:
+                rank = str(row["순위"])
+                
+            try:
+                games = int(row["경기"])
+                win = int(row["승"])
+                draw = int(row["무"])
+                loss = int(row["패"])
+                win_rate = float(row["승률"])
+                game_diff = str(row["게임차"])
+                streak = str(row["연속"])
+            except ValueError:
+                # Handle cases where data might be missing or non-numeric (e.g. before season starts)
+                games, win, draw, loss, win_rate, game_diff, streak = 0, 0, 0, 0, 0.000, "0.0", "-"
+                
+            new_rankings.append({
+                "rank": rank,
+                "team": team_key,
+                "games": games,
+                "win": win,
+                "draw": draw,
+                "loss": loss,
+                "win_rate": win_rate,
+                "game_diff": game_diff,
+                "streak": streak
+            })
+            
+        # --- Off-season Protection Logic ---
+        # If the total games played is 1440 or more (a full season), and we are in early months (Jan-Mar),
+        # it is highly likely the KBO page is still showing the *previous* finished season's data.
+        import datetime
+        current_year = datetime.datetime.now().year
+        current_month = datetime.datetime.now().month
+        
+        total_games = sum(t["games"] for t in new_rankings)
+        if str(current_year) == target_year_str and total_games >= 1440 and current_month <= 3:
+            print("⚠️ The fetched rankings appear to be from the previous finished season. Initializing with 0s.")
+            for t in new_rankings:
+                t["rank"] = "-"
+                t["games"] = 0
+                t["win"] = 0
+                t["draw"] = 0
+                t["loss"] = 0
+                t["win_rate"] = 0.000
+                t["game_diff"] = "0.0"
+                t["streak"] = "-"
+        # -----------------------------------
+            
+        # Load existing rankings.json
+        existing_rankings = {}
+        if os.path.exists(RANKINGS_FILE_PATH):
+            with open(RANKINGS_FILE_PATH, 'r', encoding='utf-8') as f:
+                try:
+                    existing_rankings = json.load(f)
+                except json.JSONDecodeError:
+                    pass
+                    
+        # Replace the specific year's list
+        existing_rankings[target_year_str] = new_rankings
+        
+        # Save back
+        with open(RANKINGS_FILE_PATH, 'w', encoding='utf-8') as f:
+            json.dump(existing_rankings, f, indent=4, ensure_ascii=False)
+            
+        print(f"📊 Processed and saved {len(new_rankings)} ranking entries for {target_year_str}.")
+        
+    except Exception as e:
+        print(f"❌ Failed to update rankings: {e}")
+
 def update_schedule_data(existing_data, new_games):
     # Convert existing list to dict map by ID for easy update/upsert
     game_map = {game["id"]: game for game in existing_data}
@@ -323,6 +419,9 @@ def main():
         existing_data = load_schedule()
         updated_data = update_schedule_data(existing_data, new_games)
         save_schedule(updated_data)
+        
+        # 4. Updating Rankings JSON
+        update_rankings(str(target_year))
         
         print("🎉 Update Complete!")
 
