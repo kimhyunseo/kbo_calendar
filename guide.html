@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBO 캘린더 사용 가이드 및 자주 묻는 질문 (FAQ)</title>
+    <meta name="description" content="KBO 프로야구 일정 캘린더 사용법과 경기 데이터 출처, 자주 묻는 질문을 확인하세요.">
+
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="https://kbo-calendar-steel.vercel.app/guide.html">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans p-4 sm:p-8 min-h-screen flex flex-col items-center">
+
+    <div class="w-full max-w-4xl bg-white shadow-xl rounded-2xl overflow-hidden">
+
+        <!-- Header -->
+        <header class="bg-blue-600 p-6 sm:p-10 text-white">
+            <a href="index.html"
+                class="inline-flex items-center gap-2 text-blue-100 hover:text-white mb-4 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+                메인으로 돌아가기
+            </a>
+            <h1 class="text-3xl sm:text-4xl font-extrabold mb-2">사용 가이드 & FAQ</h1>
+            <p class="text-blue-100 text-lg">KBO 캘린더를 200% 활용하는 방법을 소개합니다.</p>
+        </header>
+
+        <main class="p-6 sm:p-10 space-y-12">
+
+            <!-- Section 1: How to Use -->
+            <section>
+                <div class="flex items-center gap-3 mb-6">
+                    <div
+                        class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xl">
+                        1</div>
+                    <h2 class="text-2xl font-bold text-gray-900">캘린더 사용 방법</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                        <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                                </path>
+                            </svg>
+                            응원 팀 선택하기
+                        </h3>
+                        <p class="text-gray-600 leading-relaxed text-sm">
+                            화면 상단의 드롭다운 메뉴에서 응원하는 구단을 선택하세요. 선택한 구단의 경기 일정만 필터링되어 달력에 표시됩니다. 기본 설정은 '전체 보기' 또는 랜덤 팀입니다.
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                        <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            홈 / 원정 구분
+                        </h3>
+                        <p class="text-gray-600 leading-relaxed text-sm">
+                            달력 날짜 숫자에 <span
+                                class="bg-rose-50 text-rose-600 px-1 py-0.5 rounded font-bold text-xs border border-rose-100">빨간
+                                원</span> 표시가 있다면 <strong>홈 경기</strong>를 의미합니다. 표시가 없다면 원정 경기입니다. 직관 계획을 세울 때 참고하세요!
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-100">
+                        <h3 class="font-bold text-lg mb-3 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            경기 결과 확인
+                        </h3>
+                        <p class="text-gray-600 leading-relaxed text-sm">
+                            경기가 종료되면 승패 결과가 업데이트됩니다. 승리 시 웃는 마스코트, 패배 시 우는 마스코트로 직관적으로 결과를 알 수 있습니다. 경기 카드를 클릭하면 상세 점수도
+                            볼 수 있습니다.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-100">
+
+            <!-- Section 2: FAQ -->
+            <section>
+                <div class="flex items-center gap-3 mb-6">
+                    <div
+                        class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl">
+                        2</div>
+                    <h2 class="text-2xl font-bold text-gray-900">자주 묻는 질문 (FAQ)</h2>
+                </div>
+
+                <div class="space-y-4">
+                    <details
+                        class="group bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md">
+                        <summary
+                            class="flex items-center justify-between p-5 cursor-pointer bg-gray-50 group-open:bg-white transition-colors">
+                            <span class="font-bold text-gray-800">Q. 일정은 언제 업데이트 되나요?</span>
+                            <span class="transition-transform group-open:rotate-180">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="m6 9 6 6 6-6" />
+                                </svg>
+                            </span>
+                        </summary>
+                        <div class="p-5 text-gray-600 leading-relaxed border-t border-gray-100 text-sm">
+                            KBO 공식 홈페이지에서 발표된 일정을 기준으로 정기적으로 업데이트하고 있습니다. 우천 취소 등으로 인한 경기 변경 사항은 실시간 반영이 다소 지연될 수 있으니,
+                            정확한 정보는 KBO 공식 사이트를 확인해주세요.
+                        </div>
+                    </details>
+
+                    <details
+                        class="group bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md">
+                        <summary
+                            class="flex items-center justify-between p-5 cursor-pointer bg-gray-50 group-open:bg-white transition-colors">
+                            <span class="font-bold text-gray-800">Q. 티켓 예매는 어디서 하나요?</span>
+                            <span class="transition-transform group-open:rotate-180">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="m6 9 6 6 6-6" />
+                                </svg>
+                            </span>
+                        </summary>
+                        <div class="p-5 text-gray-600 leading-relaxed border-t border-gray-100 text-sm">
+                            본 사이트는 정보 제공용이며, 예매 기능은 제공하지 않습니다. 각 구단별 공식 예매처(티켓링크, 인터파크 등)를 이용해주시기 바랍니다. KBO 앱을 통해서도 예매처로
+                            이동하실 수 있습니다.
+                        </div>
+                    </details>
+
+                    <details
+                        class="group bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md">
+                        <summary
+                            class="flex items-center justify-between p-5 cursor-pointer bg-gray-50 group-open:bg-white transition-colors">
+                            <span class="font-bold text-gray-800">Q. 모바일에서도 볼 수 있나요?</span>
+                            <span class="transition-transform group-open:rotate-180">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="m6 9 6 6 6-6" />
+                                </svg>
+                            </span>
+                        </summary>
+                        <div class="p-5 text-gray-600 leading-relaxed border-t border-gray-100 text-sm">
+                            네, 물론입니다. 이 사이트는 반응형 웹으로 제작되어 스마트폰, 태블릿, PC 그 어떤 기기에서도 최적화된 화면으로 일정을 확인하실 수 있습니다.
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-50 p-6 text-center border-t border-gray-200">
+            <p class="text-sm text-gray-500 mb-2">© 2026 KBO Calendar. Unofficial Fan Site.</p>
+            <div class="flex justify-center gap-4 text-xs text-gray-400">
+                <a href="index.html" class="hover:text-gray-600">홈으로</a>
+                <a href="teams.html" class="hover:text-gray-600">구단 정보</a>
+                <a href="privacy.html" class="hover:text-gray-600">개인정보처리방침</a>
+            </div>
+        </footer>
+    </div>
+
+</body>
+
+</html>

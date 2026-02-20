@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kbo-calendar-steel.vercel.app/sitemap.xml
