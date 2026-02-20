@@ -1,11 +1,14 @@
 import kbodata
 import pandas as pd
-from datetime import datetime
 import json
 import os
 import argparse
 import sys
 import requests
+from io import StringIO
+from datetime import datetime
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 # -----------------------------
 # 1. Configuration & Constants
@@ -15,9 +18,9 @@ import requests
 SCHEDULE_FILE_PATH = os.path.join("js", "schedule.json")
 RANKINGS_FILE_PATH = os.path.join("js", "rankings.json")
 
-# Use webdriver_manager to automatically handle driver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+# Season Specific Constants
+REGULAR_SEASON_START_DATE = "03-28" # MM-DD format
+DEFAULT_GAME_TIME = "18:30"
 
 
 # Team Name Mapping (KBO Data Name -> Project Key)
@@ -251,7 +254,7 @@ def update_rankings(target_year_str):
     url = "https://www.koreabaseball.com/Record/TeamRank/TeamRankDaily.aspx"
     headers = {'User-Agent': 'Mozilla/5.0'}
     
-    from io import StringIO
+    
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
@@ -301,9 +304,8 @@ def update_rankings(target_year_str):
         # --- Off-season Protection Logic ---
         # If the total games played is 1440 or more (a full season), and we are in early months (Jan-Mar),
         # it is highly likely the KBO page is still showing the *previous* finished season's data.
-        import datetime
-        current_year = datetime.datetime.now().year
-        current_month = datetime.datetime.now().month
+        current_year = datetime.now().year
+        current_month = datetime.now().month
         
         total_games = sum(t["games"] for t in new_rankings)
         if str(current_year) == target_year_str and total_games >= 1440 and current_month <= 3:

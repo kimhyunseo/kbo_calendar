@@ -1,6 +1,16 @@
 import { DEFAULT_MASCOT_URL, KBO_TEAMS } from './constants.js';
 
 /**
+ * 주어진 날짜(Date 객체 또는 ISO 문자열)가 3월 28일 이전인지 판별하여 시범경기 여부를 반환합니다.
+ */
+const isExhibitionByDate = (dateStringOrDate) => {
+    const d = new Date(dateStringOrDate);
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+    return month < 3 || (month === 3 && day < 28);
+};
+
+/**
  * Creates the HTML content for a day cell in the calendar.
  * Marks "Home Games" with a specific style.
  */
@@ -15,36 +25,32 @@ export function createDayCellContent(arg, allScheduleData, currentSelectedTeam, 
     let isRegularSeason = false;
 
     if (appSettings) {
-        // 날짜 문자열 한 번만 계산
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const dateString = `${year}-${month}-${day}`;
 
-        if (appSettings.showHomeInfo) {
-            isHomeGame = allScheduleData.some(game => {
-                const gameDate = game.start.split('T')[0];
-                return gameDate === dateString && game.home_team === currentSelectedTeam;
-            });
-        }
+        // 해당 날짜의 내 팀 경기를 한 번만 찾기
+        const todayMyGame = allScheduleData.find(game => {
+            const gameDate = game.start.split('T')[0];
+            return gameDate === dateString && (game.home_team === currentSelectedTeam || game.away_team === currentSelectedTeam);
+        });
 
-        if (appSettings.showExhibition) {
-            // 시범 경기: note에 "시범" 포함
-            isExhibition = allScheduleData.some(game => {
-                const gameDate = game.start.split('T')[0];
-                return gameDate === dateString
-                    && (game.home_team === currentSelectedTeam || game.away_team === currentSelectedTeam)
-                    && game.note && game.note.includes('시범');
-            });
+        if (todayMyGame) {
+            // 홈 경기 여부
+            if (appSettings.showHomeInfo) {
+                isHomeGame = (todayMyGame.home_team === currentSelectedTeam);
+            }
 
-            // 정규 시즌: 경기가 있고 note에 "시범"이 없으면 초록 점 (note 없어도 OK)
-            isRegularSeason = allScheduleData.some(game => {
-                const gameDate = game.start.split('T')[0];
-                const noteValue = game.note || '';
-                return gameDate === dateString
-                    && (game.home_team === currentSelectedTeam || game.away_team === currentSelectedTeam)
-                    && !noteValue.includes('시범');
-            });
+            // 시범/정규 시즌 구분 (설정 활성화 시)
+            if (appSettings.showExhibition) {
+                const checkExhibition = isExhibitionByDate(todayMyGame.start) || (todayMyGame.note && todayMyGame.note.includes('시범'));
+                if (checkExhibition) {
+                    isExhibition = true;
+                } else {
+                    isRegularSeason = true;
+                }
+            }
         }
     }
 
@@ -188,7 +194,7 @@ export function generateEventDetailsHtml(info, currentSelectedTeam) {
         }
     }
 
-    const isExhibitionGame = eventData.note && eventData.note.includes('시범');
+    const isExhibitionGame = (eventData.note && eventData.note.includes('시범')) || isExhibitionByDate(info.event.start);
     const gameTypeBadge = isExhibitionGame
         ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-600 font-bold text-xs"><span style="width:6px;height:6px;border-radius:50%;background:#fcd34d;display:inline-block;"></span>시범 경기</span>`
         : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-50 text-green-600 font-bold text-xs"><span style="width:6px;height:6px;border-radius:50%;background:#86efac;display:inline-block;"></span>정규 시즌</span>`;
