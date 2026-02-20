@@ -4,31 +4,74 @@ import { DEFAULT_MASCOT_URL, KBO_TEAMS } from './constants.js';
  * Creates the HTML content for a day cell in the calendar.
  * Marks "Home Games" with a specific style.
  */
-export function createDayCellContent(arg, allScheduleData, currentSelectedTeam) {
+export function createDayCellContent(arg, allScheduleData, currentSelectedTeam, appSettings) {
     const date = arg.date;
     let dayNumber = arg.dayNumberText.replace('일', '');
 
-    // Logic to find if it's a home game
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const dateString = `${year}-${month}-${day}`;
 
-    const isHomeGame = allScheduleData.some(game => {
-        const gameDate = game.start.split('T')[0];
-        return gameDate === dateString && game.home_team === currentSelectedTeam;
-    });
+
+    let isHomeGame = false;
+    let isExhibition = false;
+
+    if (appSettings) {
+        if (appSettings.showHomeInfo) {
+            // Logic to find if it's a home game
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const dateString = `${year}-${month}-${day}`;
+
+            isHomeGame = allScheduleData.some(game => {
+                const gameDate = game.start.split('T')[0];
+                return gameDate === dateString && game.home_team === currentSelectedTeam;
+            });
+        }
+
+        if (appSettings.showExhibition) {
+            // Check if ANY game today is exhibition
+            // Optimization: We could pass the day's events in arg, but fullcalendar dayCellContent arg doesn't have events directly easily without loop.
+            // Re-using the same loop as above or similar.
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const dateString = `${year}-${month}-${day}`;
+
+            isExhibition = allScheduleData.some(game => {
+                const gameDate = game.start.split('T')[0];
+                return gameDate === dateString && (game.home_team === currentSelectedTeam || game.away_team === currentSelectedTeam) && (game.note && game.note.includes("시범"));
+            });
+        }
+    }
 
     // Modern "Home Game" indicator
-    let html = `<div class="flex flex-col items-center justify-start h-full w-full">`;
+    let html = `<div class="flex flex-col items-center justify-start h-full w-full pt-1">`;
 
+    // Badge + Date Layout (Grid for perfect centering)
+    // Left: Badge, Center: Date, Right: Empty
+    html += `<div class="grid grid-cols-3 items-center w-full mb-1 px-1">`;
+
+    // Left Column: Badge
+    html += `<div class="flex justify-start">`;
+    if (isExhibition) {
+        html += `<span class="bg-amber-100 text-amber-600 text-[9px] font-bold px-1.5 py-0.5 rounded-md leading-none shadow-sm whitespace-nowrap">시범</span>`;
+    }
+    html += `</div>`;
+
+    // Center Column: Date
+    html += `<div class="flex justify-center">`;
     if (isHomeGame) {
         html += `
-            <span class="w-7 h-7 flex items-center justify-center rounded-full bg-rose-50 text-rose-600 font-bold text-sm shadow-sm mb-1">${dayNumber}</span>
+            <span class="w-7 h-7 flex items-center justify-center rounded-full bg-rose-50 text-rose-600 font-bold text-sm shadow-sm z-0 shrink-0">${dayNumber}</span>
         `;
     } else {
-        html += `<span class="w-7 h-7 flex items-center justify-center rounded-full text-gray-700 font-medium text-sm mb-1">${dayNumber}</span>`;
+        html += `<span class="w-7 h-7 flex items-center justify-center rounded-full text-gray-700 font-medium text-sm z-0 shrink-0">${dayNumber}</span>`;
     }
+    html += `</div>`;
+
+    // Right Column: Empty (Spacer to balance layout)
+    html += `<div class="flex justify-end"></div>`;
+
+    html += `</div>`; // Close grid container
     html += `</div>`;
 
     return { html: html };
@@ -38,9 +81,11 @@ export function createDayCellContent(arg, allScheduleData, currentSelectedTeam) 
  * Creates the HTML content for an event (match) in the day grid.
  * Displays mascots and win/loss badges.
  */
-export function createEventContent(arg, currentSelectedTeam) {
+export function createEventContent(arg, currentSelectedTeam, appSettings) {
     const event = arg.event.extendedProps;
     const isHomeTeamSelected = event.home_team === currentSelectedTeam;
+    const showResult = appSettings ? appSettings.showResult : true;
+    const showTime = appSettings ? appSettings.showTime : true;
 
     // Determine which mascot to show (Aggressor/Opponent)
     let mascotUrl = '';
@@ -77,23 +122,30 @@ export function createEventContent(arg, currentSelectedTeam) {
         const opponentTeamKey = isHomeTeamSelected ? event.away_team : event.home_team;
         const teamSlug = KBO_TEAMS[opponentTeamKey]?.slug;
 
-        if (result === 'WIN') {
+        // Ensure default mascots are set effectively if result visuals are skipped or result is neutral
+        if (result === 'WIN' && showResult) {
             // My team won -> Opponent gets _lose image (Crying)
             if (teamSlug) mascotUrl = `assets/images/${teamSlug}_lose.png`;
             badgeHtml = `<span class="mt-1 bg-rose-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">승리</span>`;
-        } else if (result === 'LOSE') {
+        } else if (result === 'LOSE' && showResult) {
             if (teamSlug) mascotUrl = `assets/images/${teamSlug}_win.png`;
             badgeHtml = `<span class="mt-1 bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">패배</span>`;
-        } else {
+        } else if (result === 'DRAW' && showResult) {
             if (teamSlug) mascotUrl = `assets/images/${teamSlug}_tie.png`;
             badgeHtml = `<span class="mt-1 bg-slate-400 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">무승부</span>`;
         }
     } else {
-        // No score yet (Future game) -> Show Time Badge
-        const timeString = arg.event.start.toLocaleTimeString('ko-KR', {
-            hour: '2-digit', minute: '2-digit', hour12: false
-        });
-        badgeHtml = `<span class="mt-0.5 bg-gray-100 text-gray-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm z-10 border border-gray-200">${timeString}</span>`;
+        // No score yet (Future game)
+        // Show Time Badge ONLY if showTime is true
+        if (showTime) {
+            const timeString = arg.event.start.toLocaleTimeString('ko-KR', {
+                hour: '2-digit', minute: '2-digit', hour12: false
+            });
+            badgeHtml = `<span class="mt-0.5 bg-gray-100 text-gray-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm z-10 border border-gray-200">${timeString}</span>`;
+        } else {
+            // Nothing to show (just mascot)
+            badgeHtml = '';
+        }
     }
 
     return {
@@ -159,12 +211,15 @@ export function generateEventDetailsHtml(info, currentSelectedTeam) {
                 <!-- Score -->
                 <div class="flex flex-col items-center justify-center w-1/3">
                     ${hasScore ? `
-                        <div class="flex items-center gap-3 text-4xl sm:text-5xl font-black text-gray-900 tracking-tighter">
-                            <span>${eventData.home_score}</span>
-                            <span class="text-gray-300 text-3xl">:</span>
-                            <span>${eventData.away_score}</span>
                         </div>
-                    ` : `<div class="px-4 py-2 rounded-full bg-blue-50 text-blue-600 font-bold text-sm">경기 전</div>`}
+                    ` : `
+                        <div class="flex flex-col items-center gap-1">
+                            ${eventData.note === "시범 경기"
+            ? `<span class="px-2 py-1 rounded-full bg-amber-100 text-amber-600 font-bold text-xs">시범 경기</span>`
+            : `<span class="px-3 py-1 rounded-full bg-blue-50 text-blue-600 font-bold text-sm">경기 전</span>`
+        }
+                        </div>
+                    `}
                 </div>
 
                 <!-- Away -->

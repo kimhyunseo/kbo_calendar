@@ -4,7 +4,7 @@
     "description": "KBO Schedule Calendar",
     "main": "js/main.js",
     "scripts": {
-        "update-schedule": "node scripts/update_schedule.js"
+        "update-schedule": "python3 update_kbo.py"
     },
     "keywords": [],
     "author": "",

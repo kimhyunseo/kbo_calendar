@@ -4,49 +4,68 @@ import { createDayCellContent, createEventContent, generateEventDetailsHtml } fr
 document.addEventListener('DOMContentLoaded', function () {
 
     // --- [1. Configuration & Data] ---
-    // Constants imported from constants.js
-
     // DOM Elements
     const calendarEl = document.getElementById('calendar');
     const teamSelectEl = document.getElementById('team-select');
     const eventDetailsContainerEl = document.getElementById('event-details-container');
     const eventDetailsEl = document.getElementById('event-details');
 
-    // Modal Elements
-    const infoBtn = document.getElementById('info-btn');
-    const infoModal = document.getElementById('info-modal');
-    const closeModalBtn = document.getElementById('close-modal-btn');
-    const infoModalContent = document.getElementById('info-modal-content');
+    // --- [Settings State & UI] ---
+    const appSettings = {
+        showHomeInfo: true,
+        showExhibition: true,
+        showResult: true,
+        showTime: true
+    };
 
-    // --- Modal Logic ---
-    const openModal = () => {
-        infoModal.classList.remove('hidden');
-        // Small delay to allow display:block to apply before opacity transition
+    // Settings DOM Elements
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsModal = document.getElementById('settings-modal');
+    const closeSettingsBtn = document.getElementById('close-settings-btn');
+    const settingsModalContent = document.getElementById('settings-modal-content');
+
+    const toggleHomeInfo = document.getElementById('toggle-home-info');
+    const toggleExhibition = document.getElementById('toggle-exhibition');
+    const toggleResult = document.getElementById('toggle-result');
+    const toggleTime = document.getElementById('toggle-time');
+
+    // Modal Logic
+    const openSettings = () => {
+        settingsModal.classList.remove('hidden');
         setTimeout(() => {
-            infoModal.classList.remove('opacity-0');
-            infoModalContent.classList.remove('scale-95');
-            infoModalContent.classList.add('scale-100');
+            settingsModal.classList.remove('opacity-0');
+            settingsModalContent.classList.remove('scale-95');
+            settingsModalContent.classList.add('scale-100');
         }, 10);
     };
 
-    const closeModal = () => {
-        infoModal.classList.add('opacity-0');
-        infoModalContent.classList.remove('scale-100');
-        infoModalContent.classList.add('scale-95');
+    const closeSettings = () => {
+        settingsModal.classList.add('opacity-0');
+        settingsModalContent.classList.remove('scale-100');
+        settingsModalContent.classList.add('scale-95');
         setTimeout(() => {
-            infoModal.classList.add('hidden');
-        }, 300); // Match transition duration
+            settingsModal.classList.add('hidden');
+        }, 300);
     };
 
-    infoBtn.addEventListener('click', openModal);
-    closeModalBtn.addEventListener('click', closeModal);
-    // Close on backdrop click
-    infoModal.addEventListener('click', (e) => {
-        if (e.target === infoModal) closeModal();
+    settingsBtn.addEventListener('click', openSettings);
+    closeSettingsBtn.addEventListener('click', closeSettings);
+    settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) closeSettings();
     });
+
+    // Helper for Icons
+    const updateNavIcons = () => {
+        const prevBtn = document.querySelector('.fc-prev-button');
+        const nextBtn = document.querySelector('.fc-next-button');
+
+        if (prevBtn) prevBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>`;
+        if (nextBtn) nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>`;
+    };
 
     // State
     let currentSelectedTeam = '';
+    let calendar = null; // Declare calendar here
 
     // Initialize Team Selector
     Object.keys(KBO_TEAMS).forEach((teamKey, index) => {
@@ -58,18 +77,37 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     teamSelectEl.value = currentSelectedTeam;
 
-    // --- [2. Helper Functions] ---
+    // Toggle Listeners (Defined here but check for calendar existence)
+    toggleHomeInfo.addEventListener('change', (e) => {
+        appSettings.showHomeInfo = e.target.checked;
+        if (calendar) {
+            calendar.render();
+            updateNavIcons();
+        }
+    });
 
-    // Custom Icons for Buttons
-    const updateNavIcons = () => {
-        const prevBtn = document.querySelector('.fc-prev-button');
-        const nextBtn = document.querySelector('.fc-next-button');
+    toggleExhibition.addEventListener('change', (e) => {
+        appSettings.showExhibition = e.target.checked;
+        if (calendar) calendar.refetchEvents();
+    });
 
-        if (prevBtn) prevBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>`;
-        if (nextBtn) nextBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>`;
-    };
+    toggleResult.addEventListener('change', (e) => {
+        appSettings.showResult = e.target.checked;
+        if (calendar) {
+            calendar.render();
+            updateNavIcons();
+        }
+    });
 
-    // Fetch Data
+    toggleTime.addEventListener('change', (e) => {
+        appSettings.showTime = e.target.checked;
+        if (calendar) {
+            calendar.render();
+            updateNavIcons();
+        }
+    });
+
+    // --- [Data Fetching & Calendar Init] ---
     fetch('./js/schedule.json')
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok');
@@ -85,13 +123,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Filter logic
             const getFilteredEvents = (selectedTeam) => {
-                return allScheduleData.filter(game =>
-                    game.home_team === selectedTeam || game.away_team === selectedTeam
-                );
+                return allScheduleData.filter(game => {
+                    // 1. Team Filter
+                    const isMyTeam = game.home_team === selectedTeam || game.away_team === selectedTeam;
+                    if (!isMyTeam) return false;
+
+                    // 2. Exhibition Filter
+                    if (!appSettings.showExhibition) {
+                        if (game.note && game.note.includes("시범")) return false;
+                    }
+
+                    return true;
+                });
             };
 
-            // --- [3. Calendar Initialization] ---
-            const calendar = new FullCalendar.Calendar(calendarEl, {
+            // Initialize Calendar
+            calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 firstDay: 1, // Start week on Monday
                 height: 'auto',
@@ -109,31 +156,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 titleFormat: { month: 'long' }, // Year removed
                 dayCellContent: function (arg) {
-                    return createDayCellContent(arg, allScheduleData, currentSelectedTeam);
+                    return createDayCellContent(arg, allScheduleData, currentSelectedTeam, appSettings);
                 },
                 events: function (fetchInfo, successCallback, failureCallback) {
                     successCallback(getFilteredEvents(currentSelectedTeam));
                 },
                 eventContent: function (arg) {
-                    return createEventContent(arg, currentSelectedTeam);
+                    return createEventContent(arg, currentSelectedTeam, appSettings);
                 },
-                // Triggered after view render (good for icons)
                 datesSet: function () {
                     updateNavIcons();
                 },
                 eventClick: function (info) {
                     eventDetailsEl.innerHTML = generateEventDetailsHtml(info, currentSelectedTeam);
                     eventDetailsContainerEl.classList.remove('hidden');
-                    // Smooth scroll to details
                     eventDetailsContainerEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             });
 
             calendar.render();
-            // Initial Icon Update
             updateNavIcons();
 
-            // Event Listeners
+            // Team Select Listener
             teamSelectEl.addEventListener('change', function () {
                 currentSelectedTeam = this.value;
                 calendar.refetchEvents();
