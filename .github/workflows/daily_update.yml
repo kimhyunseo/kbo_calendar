@@ -26,7 +26,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run update script
-        run: python update_kbo.py
+        env:
+          TZ: Asia/Seoul
+        run: xvfb-run python update_kbo.py
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
