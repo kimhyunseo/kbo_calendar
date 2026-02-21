@@ -1,0 +1,5 @@
+kbodata
+pandas
+requests
+selenium
+webdriver-manager
