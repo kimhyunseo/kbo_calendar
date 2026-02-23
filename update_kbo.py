@@ -1,14 +1,12 @@
-import kbodata
-import pandas as pd
 import json
 import os
 import argparse
 import sys
 import requests
+from bs4 import BeautifulSoup
+import pandas as pd
 from io import StringIO
 from datetime import datetime
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 
 # -----------------------------
 # 1. Configuration & Constants
@@ -18,13 +16,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 SCHEDULE_FILE_PATH = os.path.join("js", "schedule.json")
 RANKINGS_FILE_PATH = os.path.join("js", "rankings.json")
 
-# Season Specific Constants
-REGULAR_SEASON_START_DATE = "03-28" # MM-DD format
-DEFAULT_GAME_TIME = "18:30"
-
-
 # Team Name Mapping (KBO Data Name -> Project Key)
-# Based on js/constants.js
 TEAM_MAP = {
     'LG': 'LG', 'LG 트윈스': 'LG',
     'KT': 'KT', 'KT 위즈': 'KT',
@@ -40,196 +32,152 @@ TEAM_MAP = {
 
 def get_team_key(team_name):
     """Maps various team name formats to the standard key used in constants.js"""
-    # Remove extra spaces just in case
     clean_name = team_name.strip()
-    return TEAM_MAP.get(clean_name, clean_name) # Return original if not found (for debugging)
+    return TEAM_MAP.get(clean_name, clean_name)
 
 # -----------------------------
 # 2. Data Processing Functions
 # -----------------------------
 
-def process_game_data(df, note_suffix=None):
+def fetch_monthly_schedule_via_api(year, month, note_suffix=None):
     """
-    Transforms the raw DataFrame from kbodata to a list of dictionaries 
-    matching the js/schedule.json format.
+    Fetches the monthly schedule directly from KBO Ajax API, eliminating Selenium.
+    Returns a list of game dictionaries matching js/schedule.json format.
     """
-    games_list = []
+    url = 'https://www.koreabaseball.com/ws/Schedule.asmx/GetScheduleList'
+    data = {
+        'leId': '1', # 1: KBO
+        'srIdList': '0,1,2,3,4,5,7,9', # All series (Regular, Exhibition, Postseason)
+        'seasonId': str(year),
+        'gameMonth': f"{month:02d}",
+        'teamId': ''
+    }
+    headers = {
+        'User-Agent': 'Mozilla/5.0',
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
 
-    # kbodata returns individual rows for each team in a game. 
-    # We need to group them to form a single game entry.
-    
-    # Create a unique key to group by (Date + DoubleHeader status)
-    # Note: We can't easily rely on just date for grouping because getting reliable home/away pairing 
-    # from the flat list requires careful handling. 
-    # Fortunately, kbodata output usually has 'home' and 'away' columns in the raw data 
-    # BUT the `scoreboard_to_DataFrame` might restructure it. 
-    # Let's inspect standard kbodata output structure assumption:
-    # columns: year, month, day, week, time, team, r, h, e, b, place, audience, dbheader, home, away
-    
-    # It seems 'home' and 'away' columns exist in the dataframe returned by scoreboard_to_DataFrame
-    
-    if df.empty:
+    try:
+        response = requests.post(url, data=data, headers=headers)
+        response.raise_for_status()
+        data_json = response.json()
+        rows = data_json.get('rows', [])
+    except Exception as e:
+        print("❌ API fetching error:", e)
         return []
 
-    # Create a grouping key
-    df["group_key"] = (
-        df["year"].astype(str) + 
-        df["month"].astype(str).str.zfill(2) + 
-        df["day"].astype(str).str.zfill(2) + 
-        "_" + df["home"].astype(str) + "_" + df["away"].astype(str) +
-        "_" + df["dbheader"].astype(str)
-    )
+    raw_games = []
+    current_date_str = ""
 
-    for key, group in df.groupby("group_key"):
-        if group.empty:
+    for r in rows:
+        cells = r['row']
+        if not cells:
             continue
             
-        first_row = group.iloc[0]
-        
-        raw_home = first_row["home"]
-        raw_away = first_row["away"]
-        
-        home_key = get_team_key(raw_home)
-        away_key = get_team_key(raw_away)
-        
-        start_year = int(first_row["year"])
-        start_month = int(first_row["month"])
-        start_day = int(first_row["day"])
-        
-        # Parse Time if available, otherwise default
+        start_idx = 0
+        if cells[0]['Class'] == 'day':
+            day_text = BeautifulSoup(cells[0]['Text'], "html.parser").get_text().strip()
+            # day_text example: "03.09(토)"
+            current_date_str = day_text.split('(')[0]
+            start_idx = 1
+            
+        if not current_date_str:
+            continue
+            
+        # Example format: 03.09 -> month 3, day 9
         try:
-            time_str = first_row["time"]
-            # expecting "18:30" format
-            hour, minute = map(int, time_str.split(":"))
-        except:
-            hour, minute = 18, 30 # Default
-
-        game_dt = datetime(start_year, start_month, start_day, hour, minute)
-        start_iso = game_dt.strftime("%Y-%m-%dT%H:%M:%S")
-
-        # Scores
-        # group contains two rows: one for home team, one for away team.
-        # We need to extract 'r' (runs) for the home team and away team.
+            month_str, day_str = current_date_str.split('.')
+            start_month = int(month_str)
+            start_day = int(day_str)
+        except Exception:
+            continue
+            
+        time_text = BeautifulSoup(cells[start_idx]['Text'], "html.parser").get_text().strip()
+        html_play = cells[start_idx + 1]['Text']
+        soup = BeautifulSoup(html_play, "html.parser")
+        spans = soup.find_all('span')
         
-        home_row = group[group["team"] == raw_home]
-        away_row = group[group["team"] == raw_away]
-        
-        home_score = None
         away_score = None
+        home_score = None
+        away_team_raw = ""
+        home_team_raw = ""
+        status = "scheduled"
         
-        # Helper to safely get score
-        def get_score(row_series):
-            if len(row_series) > 0:
-                val = row_series.iloc[0]["r"]
-                # kbodata might return '-' or NaN for scheduled games
-                if pd.isna(val) or val == '-' or str(val).strip() == '':
-                    return None
-                try:
-                    return int(val)
-                except:
-                    return None
-            return None
-
-        home_score = get_score(home_row)
-        away_score = get_score(away_row)
+        if len(spans) >= 3:
+            away_team_raw = spans[0].text.strip()
+            home_team_raw = spans[-1].text.strip()
+            
+            em = soup.find('em')
+            if em:
+                score_spans = em.find_all('span')
+                if len(score_spans) == 3 and 'vs' in score_spans[1].text:
+                    away_score_str = score_spans[0].text.strip()
+                    home_score_str = score_spans[2].text.strip()
+                    if away_score_str.isdigit() and home_score_str.isdigit():
+                        away_score = int(away_score_str)
+                        home_score = int(home_score_str)
+                        status = "end"
         
-        # Generate ID: YYYYMMDD_HomeKey_AwayKey
-        # Handling double headers in ID if necessary. 
-        # Existing ID format in schedule.json seems to be YYYYMMDD_Home_Away
-        # If double header, maybe force unique ID? 
-        # For now, let's stick to simple format. 
-        # If duplicate ID exists in same day (DH), we might need suffix.
-        game_id = f"{start_year}{start_month:02d}{start_day:02d}_{home_key}_{away_key}"
+        stadium = BeautifulSoup(cells[start_idx + 6]['Text'], "html.parser").get_text().strip()
+        api_note = BeautifulSoup(cells[start_idx + 7]['Text'], "html.parser").get_text().strip()
         
-        if first_row["dbheader"] > 0:
-            game_id += f"_DH{int(first_row['dbheader'])}"
-
-        # Status
-        status = "scheduled" # default
-        if home_score is not None and away_score is not None:
-            status = "end"
+        if "취소" in api_note or "취소" in html_play:
+            status = "canceled"
+            
+        try:
+            hour, minute = map(int, time_text.split(':'))
+        except:
+            hour, minute = 18, 30
+            
+        game_dt = datetime(year, start_month, start_day, hour, minute)
+        start_iso = game_dt.strftime("%Y-%m-%dT%H:%M:%S")
         
-        # Note
-        note = ""
-        stadium = first_row["place"]
-        if stadium:
-            note = str(stadium)
-        if first_row["dbheader"] > 0:
-             note += f" (DH{int(first_row['dbheader'])})"
+        home_key = get_team_key(home_team_raw)
+        away_key = get_team_key(away_team_raw)
         
+        if not home_key or not away_key:
+            continue
+            
+        base_id = f"{year}{start_month:02d}{start_day:02d}_{home_key}_{away_key}"
+        
+        note_str = stadium
+        if api_note and api_note != "-":
+            note_str += f" ({api_note})"
         if note_suffix:
-            if note:
-                note += f" ({note_suffix})"
-            else:
-                note = note_suffix
-
-        game_entry = {
-            "id": game_id,
+            note_str += f" ({note_suffix})"
+            
+        raw_games.append({
+            "base_id": base_id,
+            "id": base_id, # Will be adjusted if DH
             "start": start_iso,
             "home_team": home_key,
             "away_team": away_key,
             "home_score": home_score,
             "away_score": away_score,
-            "note": note,
+            "note": note_str,
             "status": status
-        }
-        
-        games_list.append(game_entry)
+        })
 
-    return games_list
-
-def process_basic_schedule(df, note_suffix=None):
-    """
-    Fallback function to process basic schedule DataFrame when detailed game data is missing.
-    Columns: status, date, home, away, dbheader, gameid
-    """
-    games_list = []
+    # Adjust Double Headers IDs
+    from collections import Counter
+    id_counts = Counter([g["base_id"] for g in raw_games])
+    current_dh = {bid: 1 for bid in id_counts if id_counts[bid] > 1}
     
-    if df.empty:
-        return []
+    games_list = []
+    for g in raw_games:
+        bid = g["base_id"]
+        if id_counts[bid] > 1:
+            dh_num = current_dh[bid]
+            g["id"] = f"{bid}_DH{dh_num}"
+            current_dh[bid] += 1
+        del g["base_id"]
+        games_list.append(g)
 
-    for _, row in df.iterrows():
-        raw_home = row["home"]
-        raw_away = row["away"]
-        
-        home_key = get_team_key(raw_home)
-        away_key = get_team_key(raw_away)
-        
-        # Parse Date (YYYYMMDD)
-        date_str = str(row["date"])
-        year = int(date_str[:4])
-        month = int(date_str[4:6])
-        day = int(date_str[6:8])
-        
-        # Default Time: 18:30 (Common KBO time)
-        hour, minute = 18, 30 
-        
-        game_dt = datetime(year, month, day, hour, minute)
-        start_iso = game_dt.strftime("%Y-%m-%dT%H:%M:%S")
-        
-        # Generate ID
-        game_id = f"{year}{month:02d}{day:02d}_{home_key}_{away_key}"
-        if row["dbheader"] > 0:
-            game_id += f"_DH{int(row['dbheader'])}"
-            
-        game_entry = {
-            "id": game_id,
-            "start": start_iso,
-            "home_team": home_key,
-            "away_team": away_key,
-            "home_score": None,
-            "away_score": None,
-            "note": note_suffix if note_suffix else "", # Use note_suffix if provided
-            "status": "scheduled"
-        }
-        games_list.append(game_entry)
-        
     return games_list
 
 # -----------------------------
 # 3. JSON Handling
 # -----------------------------
-# ... (rest of JSON functions are same, just ensuring correct placement)
 
 def load_schedule():
     if not os.path.exists(SCHEDULE_FILE_PATH):
@@ -253,7 +201,6 @@ def update_rankings(target_year_str):
     print(f"🏆 Fetching KBO Rankings for {target_year_str}...")
     url = "https://www.koreabaseball.com/Record/TeamRank/TeamRankDaily.aspx"
     headers = {'User-Agent': 'Mozilla/5.0'}
-    
     
     try:
         response = requests.get(url, headers=headers)
@@ -302,8 +249,6 @@ def update_rankings(target_year_str):
             })
             
         # --- Off-season Protection Logic ---
-        # If the total games played is 1440 or more (a full season), and we are in early months (Jan-Mar),
-        # it is highly likely the KBO page is still showing the *previous* finished season's data.
         current_year = datetime.now().year
         current_month = datetime.now().month
         
@@ -343,7 +288,6 @@ def update_rankings(target_year_str):
         print(f"❌ Failed to update rankings: {e}")
 
 def update_schedule_data(existing_data, new_games):
-    # Convert existing list to dict map by ID for easy update/upsert
     game_map = {game["id"]: game for game in existing_data}
     
     updates_count = 0
@@ -353,8 +297,6 @@ def update_schedule_data(existing_data, new_games):
         gid = game["id"]
         if gid in game_map:
             # Update existing
-            # We preserve 'note' if it was manually edited? 
-            # For now, let's assume we overwrite to keep sync with official source.
             game_map[gid].update(game)
             updates_count += 1
         else:
@@ -362,7 +304,6 @@ def update_schedule_data(existing_data, new_games):
             game_map[gid] = game
             new_count += 1
             
-    # Convert back to list and sort by start time
     updated_list = list(game_map.values())
     updated_list.sort(key=lambda x: x["start"])
     
@@ -389,27 +330,7 @@ def main():
         print(f"📝 Adding custom note: '{custom_note}'")
 
     try:
-        # 1. Scraping
-        # Install driver and get path
-        driver_path = ChromeDriverManager().install()
-        
-        schedule = kbodata.get_monthly_schedule(target_year, target_month, driver_path)
-        
-        # Try getting detailed data first
-        raw_data = kbodata.get_game_data(schedule, driver_path)
-        df = kbodata.scoreboard_to_DataFrame(raw_data)
-        
-        new_games = []
-        
-        if not df.empty:
-            print(f"✅ Detailed data found ({len(df)} records). Processing...")
-            new_games = process_game_data(df, custom_note)
-        elif not schedule.empty:
-            print(f"⚠️ Detailed data broken/missing. Using basic schedule ({len(schedule)} records)...")
-            new_games = process_basic_schedule(schedule, custom_note)
-        else:
-            print("❌ No data found.")
-            return
+        new_games = fetch_monthly_schedule_via_api(target_year, target_month, custom_note)
 
         print(f"✅ Scraped {len(new_games)} games.")
 
