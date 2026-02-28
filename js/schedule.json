@@ -2046,7 +2046,7 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "마산 (시범경기)",
+        "note": "마산",
         "status": "scheduled"
     },
     {
@@ -2056,7 +2056,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "이천(두산) (시범경기)",
+        "note": "이천(두산)",
         "status": "scheduled"
     },
     {
@@ -2066,7 +2066,7 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "사직 (시범경기)",
+        "note": "사직",
         "status": "scheduled"
     },
     {
@@ -2076,7 +2076,7 @@
         "away_team": "SSG",
         "home_score": null,
         "away_score": null,
-        "note": "광주 (시범경기)",
+        "note": "광주",
         "status": "scheduled"
     },
     {
@@ -2086,7 +2086,7 @@
         "away_team": "삼성",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2096,7 +2096,7 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "마산 (시범경기)",
+        "note": "마산",
         "status": "scheduled"
     },
     {
@@ -2106,7 +2106,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "이천(두산) (시범경기)",
+        "note": "이천(두산)",
         "status": "scheduled"
     },
     {
@@ -2116,7 +2116,7 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "사직 (시범경기)",
+        "note": "사직",
         "status": "scheduled"
     },
     {
@@ -2126,7 +2126,7 @@
         "away_team": "SSG",
         "home_score": null,
         "away_score": null,
-        "note": "광주 (시범경기)",
+        "note": "광주",
         "status": "scheduled"
     },
     {
@@ -2136,7 +2136,7 @@
         "away_team": "삼성",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2146,7 +2146,7 @@
         "away_team": "삼성",
         "home_score": null,
         "away_score": null,
-        "note": "이천(두산) (시범경기)",
+        "note": "이천(두산)",
         "status": "scheduled"
     },
     {
@@ -2156,7 +2156,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "마산 (시범경기)",
+        "note": "마산",
         "status": "scheduled"
     },
     {
@@ -2166,7 +2166,7 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "사직 (시범경기)",
+        "note": "사직",
         "status": "scheduled"
     },
     {
@@ -2176,7 +2176,7 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "광주 (시범경기)",
+        "note": "광주",
         "status": "scheduled"
     },
     {
@@ -2186,7 +2186,7 @@
         "away_team": "SSG",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2196,7 +2196,7 @@
         "away_team": "삼성",
         "home_score": null,
         "away_score": null,
-        "note": "이천(두산) (시범경기)",
+        "note": "이천(두산)",
         "status": "scheduled"
     },
     {
@@ -2206,7 +2206,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "마산 (시범경기)",
+        "note": "마산",
         "status": "scheduled"
     },
     {
@@ -2216,7 +2216,7 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "사직 (시범경기)",
+        "note": "사직",
         "status": "scheduled"
     },
     {
@@ -2226,7 +2226,7 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "광주 (시범경기)",
+        "note": "광주",
         "status": "scheduled"
     },
     {
@@ -2236,7 +2236,7 @@
         "away_team": "SSG",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2246,7 +2246,7 @@
         "away_team": "삼성",
         "home_score": null,
         "away_score": null,
-        "note": "문학 (시범경기)",
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2256,17 +2256,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "사직 (시범경기)",
-        "status": "scheduled"
-    },
-    {
-        "id": "20260316_NC_KIA",
-        "start": "2026-03-16T13:00:00",
-        "home_team": "NC",
-        "away_team": "KIA",
-        "home_score": null,
-        "away_score": null,
-        "note": "창원 (시범경기)",
+        "note": "사직",
         "status": "scheduled"
     },
     {
@@ -2276,7 +2266,7 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "수원 (시범경기)",
+        "note": "수원",
         "status": "scheduled"
     },
     {
@@ -2286,7 +2276,17 @@
         "away_team": "두산",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
+        "status": "scheduled"
+    },
+    {
+        "id": "20260316_NC_KIA",
+        "start": "2026-03-16T17:00:00",
+        "home_team": "NC",
+        "away_team": "KIA",
+        "home_score": null,
+        "away_score": null,
+        "note": "창원",
         "status": "scheduled"
     },
     {
@@ -2296,7 +2296,7 @@
         "away_team": "삼성",
         "home_score": null,
         "away_score": null,
-        "note": "문학 (시범경기)",
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2306,7 +2306,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "사직 (시범경기)",
+        "note": "사직",
         "status": "scheduled"
     },
     {
@@ -2316,7 +2316,7 @@
         "away_team": "KIA",
         "home_score": null,
         "away_score": null,
-        "note": "창원 (시범경기)",
+        "note": "창원",
         "status": "scheduled"
     },
     {
@@ -2326,7 +2326,7 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "수원 (시범경기)",
+        "note": "수원",
         "status": "scheduled"
     },
     {
@@ -2336,7 +2336,7 @@
         "away_team": "두산",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2346,7 +2346,7 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "문학 (시범경기)",
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2356,7 +2356,7 @@
         "away_team": "두산",
         "home_score": null,
         "away_score": null,
-        "note": "사직 (시범경기)",
+        "note": "사직",
         "status": "scheduled"
     },
     {
@@ -2366,7 +2366,7 @@
         "away_team": "삼성",
         "home_score": null,
         "away_score": null,
-        "note": "창원 (시범경기)",
+        "note": "창원",
         "status": "scheduled"
     },
     {
@@ -2376,7 +2376,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "수원 (시범경기)",
+        "note": "수원",
         "status": "scheduled"
     },
     {
@@ -2386,7 +2386,7 @@
         "away_team": "KIA",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2396,7 +2396,7 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "문학 (시범경기)",
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2406,7 +2406,7 @@
         "away_team": "두산",
         "home_score": null,
         "away_score": null,
-        "note": "사직 (시범경기)",
+        "note": "사직",
         "status": "scheduled"
     },
     {
@@ -2416,7 +2416,7 @@
         "away_team": "삼성",
         "home_score": null,
         "away_score": null,
-        "note": "창원 (시범경기)",
+        "note": "창원",
         "status": "scheduled"
     },
     {
@@ -2426,7 +2426,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "수원 (시범경기)",
+        "note": "수원",
         "status": "scheduled"
     },
     {
@@ -2436,7 +2436,7 @@
         "away_team": "KIA",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2446,7 +2446,7 @@
         "away_team": "KIA",
         "home_score": null,
         "away_score": null,
-        "note": "잠실 (시범경기)",
+        "note": "잠실",
         "status": "scheduled"
     },
     {
@@ -2456,7 +2456,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "문학 (시범경기)",
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2466,7 +2466,7 @@
         "away_team": "한화",
         "home_score": null,
         "away_score": null,
-        "note": "사직 (시범경기)",
+        "note": "사직",
         "status": "scheduled"
     },
     {
@@ -2476,7 +2476,7 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "대구 (시범경기)",
+        "note": "대구",
         "status": "scheduled"
     },
     {
@@ -2486,7 +2486,7 @@
         "away_team": "NC",
         "home_score": null,
         "away_score": null,
-        "note": "수원 (시범경기)",
+        "note": "수원",
         "status": "scheduled"
     },
     {
@@ -2496,17 +2496,7 @@
         "away_team": "KIA",
         "home_score": null,
         "away_score": null,
-        "note": "잠실 (시범경기)",
-        "status": "scheduled"
-    },
-    {
-        "id": "20260322_SSG_키움",
-        "start": "2026-03-22T13:00:00",
-        "home_team": "SSG",
-        "away_team": "키움",
-        "home_score": null,
-        "away_score": null,
-        "note": "문학 (시범경기)",
+        "note": "잠실",
         "status": "scheduled"
     },
     {
@@ -2516,7 +2506,7 @@
         "away_team": "한화",
         "home_score": null,
         "away_score": null,
-        "note": "사직 (시범경기)",
+        "note": "사직",
         "status": "scheduled"
     },
     {
@@ -2526,7 +2516,7 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "대구 (시범경기)",
+        "note": "대구",
         "status": "scheduled"
     },
     {
@@ -2536,7 +2526,17 @@
         "away_team": "NC",
         "home_score": null,
         "away_score": null,
-        "note": "수원 (시범경기)",
+        "note": "수원",
+        "status": "scheduled"
+    },
+    {
+        "id": "20260322_SSG_키움",
+        "start": "2026-03-22T17:00:00",
+        "home_team": "SSG",
+        "away_team": "키움",
+        "home_score": null,
+        "away_score": null,
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2546,7 +2546,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "잠실 (시범경기)",
+        "note": "잠실",
         "status": "scheduled"
     },
     {
@@ -2556,17 +2556,7 @@
         "away_team": "롯데",
         "home_score": null,
         "away_score": null,
-        "note": "문학 (시범경기)",
-        "status": "scheduled"
-    },
-    {
-        "id": "20260323_삼성_KIA",
-        "start": "2026-03-23T13:00:00",
-        "home_team": "삼성",
-        "away_team": "KIA",
-        "home_score": null,
-        "away_score": null,
-        "note": "대구 (시범경기)",
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2576,17 +2566,27 @@
         "away_team": "두산",
         "home_score": null,
         "away_score": null,
-        "note": "수원 (시범경기)",
+        "note": "수원",
+        "status": "scheduled"
+    },
+    {
+        "id": "20260323_삼성_KIA",
+        "start": "2026-03-23T18:00:00",
+        "home_team": "삼성",
+        "away_team": "KIA",
+        "home_score": null,
+        "away_score": null,
+        "note": "대구",
         "status": "scheduled"
     },
     {
         "id": "20260323_한화_NC",
-        "start": "2026-03-23T13:00:00",
+        "start": "2026-03-23T18:00:00",
         "home_team": "한화",
         "away_team": "NC",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2596,7 +2596,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "잠실 (시범경기)",
+        "note": "잠실",
         "status": "scheduled"
     },
     {
@@ -2606,7 +2606,7 @@
         "away_team": "롯데",
         "home_score": null,
         "away_score": null,
-        "note": "문학 (시범경기)",
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2616,7 +2616,7 @@
         "away_team": "KIA",
         "home_score": null,
         "away_score": null,
-        "note": "대구 (시범경기)",
+        "note": "대구",
         "status": "scheduled"
     },
     {
@@ -2626,7 +2626,7 @@
         "away_team": "두산",
         "home_score": null,
         "away_score": null,
-        "note": "수원 (시범경기)",
+        "note": "수원",
         "status": "scheduled"
     },
     {
@@ -2636,7 +2636,7 @@
         "away_team": "NC",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2646,7 +2646,7 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "잠실 (시범경기)",
+        "note": "잠실",
         "status": "scheduled"
     },
     {
@@ -2656,7 +2656,7 @@
         "away_team": "KIA",
         "home_score": null,
         "away_score": null,
-        "note": "문학 (시범경기)",
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2666,7 +2666,7 @@
         "away_team": "롯데",
         "home_score": null,
         "away_score": null,
-        "note": "대구 (시범경기)",
+        "note": "대구",
         "status": "scheduled"
     },
     {
@@ -2676,7 +2676,7 @@
         "away_team": "두산",
         "home_score": null,
         "away_score": null,
-        "note": "창원 (시범경기)",
+        "note": "창원",
         "status": "scheduled"
     },
     {
@@ -2686,7 +2686,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2696,7 +2696,7 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "잠실 (시범경기)",
+        "note": "잠실",
         "status": "scheduled"
     },
     {
@@ -2706,7 +2706,7 @@
         "away_team": "KIA",
         "home_score": null,
         "away_score": null,
-        "note": "문학 (시범경기)",
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2716,7 +2716,7 @@
         "away_team": "롯데",
         "home_score": null,
         "away_score": null,
-        "note": "대구 (시범경기)",
+        "note": "대구",
         "status": "scheduled"
     },
     {
@@ -2726,7 +2726,7 @@
         "away_team": "두산",
         "home_score": null,
         "away_score": null,
-        "note": "창원 (시범경기)",
+        "note": "창원",
         "status": "scheduled"
     },
     {
@@ -2736,7 +2736,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -2746,7 +2746,7 @@
         "away_team": "KIA",
         "home_score": null,
         "away_score": null,
-        "note": "잠실 (시범경기)",
+        "note": "잠실",
         "status": "scheduled"
     },
     {
@@ -2756,7 +2756,7 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "문학 (시범경기)",
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -2766,7 +2766,7 @@
         "away_team": "두산",
         "home_score": null,
         "away_score": null,
-        "note": "대구 (시범경기)",
+        "note": "대구",
         "status": "scheduled"
     },
     {
@@ -2776,7 +2776,7 @@
         "away_team": "롯데",
         "home_score": null,
         "away_score": null,
-        "note": "창원 (시범경기)",
+        "note": "창원",
         "status": "scheduled"
     },
     {
@@ -2786,7 +2786,7 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "대전 (시범경기)",
+        "note": "대전",
         "status": "scheduled"
     },
     {
