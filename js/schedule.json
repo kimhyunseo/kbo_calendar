@@ -2044,50 +2044,50 @@
         "start": "2026-03-12T13:00:00",
         "home_team": "NC",
         "away_team": "LG",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 6,
+        "away_score": 11,
         "note": "마산",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260312_두산_키움",
         "start": "2026-03-12T13:00:00",
         "home_team": "두산",
         "away_team": "키움",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 9,
+        "away_score": 7,
         "note": "이천(두산)",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260312_롯데_KT",
         "start": "2026-03-12T13:00:00",
         "home_team": "롯데",
         "away_team": "KT",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 4,
+        "away_score": 3,
         "note": "사직",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260312_KIA_SSG",
         "start": "2026-03-12T13:00:00",
         "home_team": "KIA",
         "away_team": "SSG",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 9,
+        "away_score": 4,
         "note": "광주",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260312_한화_삼성",
         "start": "2026-03-12T13:00:00",
         "home_team": "한화",
         "away_team": "삼성",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 3,
+        "away_score": 12,
         "note": "대전",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260313_NC_LG",
