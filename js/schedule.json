@@ -2941,7 +2941,7 @@
     },
     {
         "id": "20260404_두산_한화",
-        "start": "2026-04-04T17:00:00",
+        "start": "2026-04-04T14:00:00",
         "home_team": "두산",
         "away_team": "한화",
         "home_score": null,
@@ -3240,6 +3240,16 @@
         "status": "scheduled"
     },
     {
+        "id": "20260411_한화_KIA",
+        "start": "2026-04-11T14:00:00",
+        "home_team": "한화",
+        "away_team": "KIA",
+        "home_score": null,
+        "away_score": null,
+        "note": "대전",
+        "status": "scheduled"
+    },
+    {
         "id": "20260411_LG_SSG",
         "start": "2026-04-11T17:00:00",
         "home_team": "LG",
@@ -3277,16 +3287,6 @@
         "home_score": null,
         "away_score": null,
         "note": "고척",
-        "status": "scheduled"
-    },
-    {
-        "id": "20260411_한화_KIA",
-        "start": "2026-04-11T17:00:00",
-        "home_team": "한화",
-        "away_team": "KIA",
-        "home_score": null,
-        "away_score": null,
-        "note": "대전",
         "status": "scheduled"
     },
     {
