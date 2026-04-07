@@ -3044,50 +3044,50 @@
         "start": "2026-04-07T18:30:00",
         "home_team": "두산",
         "away_team": "키움",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 2,
+        "away_score": 5,
         "note": "잠실",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260407_SSG_한화",
         "start": "2026-04-07T18:30:00",
         "home_team": "SSG",
         "away_team": "한화",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 2,
+        "away_score": 6,
         "note": "문학",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260407_롯데_KT",
         "start": "2026-04-07T18:30:00",
         "home_team": "롯데",
         "away_team": "KT",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 3,
+        "away_score": 7,
         "note": "사직",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260407_NC_LG",
         "start": "2026-04-07T18:30:00",
         "home_team": "NC",
         "away_team": "LG",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 0,
+        "away_score": 2,
         "note": "창원",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260407_KIA_삼성",
         "start": "2026-04-07T18:30:00",
         "home_team": "KIA",
         "away_team": "삼성",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 3,
+        "away_score": 10,
         "note": "광주",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260408_두산_키움",
