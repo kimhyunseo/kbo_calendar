@@ -3146,8 +3146,8 @@
         "away_team": "키움",
         "home_score": null,
         "away_score": null,
-        "note": "잠실",
-        "status": "scheduled"
+        "note": "잠실 (우천취소)",
+        "status": "canceled"
     },
     {
         "id": "20260409_SSG_한화",
@@ -3156,8 +3156,8 @@
         "away_team": "한화",
         "home_score": null,
         "away_score": null,
-        "note": "문학",
-        "status": "scheduled"
+        "note": "문학 (우천취소)",
+        "status": "canceled"
     },
     {
         "id": "20260409_롯데_KT",
@@ -3166,8 +3166,8 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "사직",
-        "status": "scheduled"
+        "note": "사직 (우천취소)",
+        "status": "canceled"
     },
     {
         "id": "20260409_NC_LG",
@@ -3176,8 +3176,8 @@
         "away_team": "LG",
         "home_score": null,
         "away_score": null,
-        "note": "창원",
-        "status": "scheduled"
+        "note": "창원 (우천취소)",
+        "status": "canceled"
     },
     {
         "id": "20260409_KIA_삼성",
@@ -3186,8 +3186,8 @@
         "away_team": "삼성",
         "home_score": null,
         "away_score": null,
-        "note": "광주",
-        "status": "scheduled"
+        "note": "광주 (우천취소)",
+        "status": "canceled"
     },
     {
         "id": "20260410_LG_SSG",
