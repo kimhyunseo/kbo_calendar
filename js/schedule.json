@@ -4091,7 +4091,7 @@
     },
     {
         "id": "20260501_LG_NC",
-        "start": "2026-05-01T18:30:00",
+        "start": "2026-05-01T17:00:00",
         "home_team": "LG",
         "away_team": "NC",
         "home_score": null,
@@ -4101,7 +4101,7 @@
     },
     {
         "id": "20260501_SSG_롯데",
-        "start": "2026-05-01T18:30:00",
+        "start": "2026-05-01T17:00:00",
         "home_team": "SSG",
         "away_team": "롯데",
         "home_score": null,
@@ -4111,7 +4111,7 @@
     },
     {
         "id": "20260501_삼성_한화",
-        "start": "2026-05-01T18:30:00",
+        "start": "2026-05-01T17:00:00",
         "home_team": "삼성",
         "away_team": "한화",
         "home_score": null,
@@ -4121,7 +4121,7 @@
     },
     {
         "id": "20260501_KIA_KT",
-        "start": "2026-05-01T18:30:00",
+        "start": "2026-05-01T17:00:00",
         "home_team": "KIA",
         "away_team": "KT",
         "home_score": null,
@@ -4131,12 +4131,22 @@
     },
     {
         "id": "20260501_키움_두산",
-        "start": "2026-05-01T18:30:00",
+        "start": "2026-05-01T17:00:00",
         "home_team": "키움",
         "away_team": "두산",
         "home_score": null,
         "away_score": null,
         "note": "고척",
+        "status": "scheduled"
+    },
+    {
+        "id": "20260502_SSG_롯데",
+        "start": "2026-05-02T14:00:00",
+        "home_team": "SSG",
+        "away_team": "롯데",
+        "home_score": null,
+        "away_score": null,
+        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -4147,16 +4157,6 @@
         "home_score": null,
         "away_score": null,
         "note": "잠실",
-        "status": "scheduled"
-    },
-    {
-        "id": "20260502_SSG_롯데",
-        "start": "2026-05-02T17:00:00",
-        "home_team": "SSG",
-        "away_team": "롯데",
-        "home_score": null,
-        "away_score": null,
-        "note": "문학",
         "status": "scheduled"
     },
     {
@@ -4440,6 +4440,16 @@
         "status": "scheduled"
     },
     {
+        "id": "20260509_한화_LG",
+        "start": "2026-05-09T14:00:00",
+        "home_team": "한화",
+        "away_team": "LG",
+        "home_score": null,
+        "away_score": null,
+        "note": "대전",
+        "status": "scheduled"
+    },
+    {
         "id": "20260509_두산_SSG",
         "start": "2026-05-09T17:00:00",
         "home_team": "두산",
@@ -4477,16 +4487,6 @@
         "home_score": null,
         "away_score": null,
         "note": "고척",
-        "status": "scheduled"
-    },
-    {
-        "id": "20260509_한화_LG",
-        "start": "2026-05-09T17:00:00",
-        "home_team": "한화",
-        "away_team": "LG",
-        "home_score": null,
-        "away_score": null,
-        "note": "대전",
         "status": "scheduled"
     },
     {
@@ -4740,6 +4740,16 @@
         "status": "scheduled"
     },
     {
+        "id": "20260516_KT_한화",
+        "start": "2026-05-16T14:00:00",
+        "home_team": "KT",
+        "away_team": "한화",
+        "home_score": null,
+        "away_score": null,
+        "note": "수원",
+        "status": "scheduled"
+    },
+    {
         "id": "20260516_두산_롯데",
         "start": "2026-05-16T17:00:00",
         "home_team": "두산",
@@ -4777,16 +4787,6 @@
         "home_score": null,
         "away_score": null,
         "note": "창원",
-        "status": "scheduled"
-    },
-    {
-        "id": "20260516_KT_한화",
-        "start": "2026-05-16T17:00:00",
-        "home_team": "KT",
-        "away_team": "한화",
-        "home_score": null,
-        "away_score": null,
-        "note": "수원",
         "status": "scheduled"
     },
     {
@@ -4856,7 +4856,7 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "대구",
+        "note": "포항",
         "status": "scheduled"
     },
     {
@@ -4906,7 +4906,7 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "대구",
+        "note": "포항",
         "status": "scheduled"
     },
     {
@@ -4956,7 +4956,7 @@
         "away_team": "KT",
         "home_score": null,
         "away_score": null,
-        "note": "대구",
+        "note": "포항",
         "status": "scheduled"
     },
     {
