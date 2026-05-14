@@ -4644,50 +4644,50 @@
         "start": "2026-05-14T18:30:00",
         "home_team": "LG",
         "away_team": "삼성",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 5,
+        "away_score": 9,
         "note": "잠실",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260514_롯데_NC",
         "start": "2026-05-14T18:30:00",
         "home_team": "롯데",
         "away_team": "NC",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 4,
+        "away_score": 5,
         "note": "사직",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260514_KT_SSG",
         "start": "2026-05-14T18:30:00",
         "home_team": "KT",
         "away_team": "SSG",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 10,
+        "away_score": 16,
         "note": "수원",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260514_KIA_두산",
         "start": "2026-05-14T18:30:00",
         "home_team": "KIA",
         "away_team": "두산",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 5,
+        "away_score": 3,
         "note": "광주",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260514_키움_한화",
         "start": "2026-05-14T18:30:00",
         "home_team": "키움",
         "away_team": "한화",
-        "home_score": null,
-        "away_score": null,
+        "home_score": 1,
+        "away_score": 10,
         "note": "고척",
-        "status": "scheduled"
+        "status": "end"
     },
     {
         "id": "20260515_두산_롯데",
@@ -5340,6 +5340,16 @@
         "status": "scheduled"
     },
     {
+        "id": "20260530_삼성_두산",
+        "start": "2026-05-30T14:00:00",
+        "home_team": "삼성",
+        "away_team": "두산",
+        "home_score": null,
+        "away_score": null,
+        "note": "대구",
+        "status": "scheduled"
+    },
+    {
         "id": "20260530_LG_KIA",
         "start": "2026-05-30T17:00:00",
         "home_team": "LG",
@@ -5347,16 +5357,6 @@
         "home_score": null,
         "away_score": null,
         "note": "잠실",
-        "status": "scheduled"
-    },
-    {
-        "id": "20260530_삼성_두산",
-        "start": "2026-05-30T17:00:00",
-        "home_team": "삼성",
-        "away_team": "두산",
-        "home_score": null,
-        "away_score": null,
-        "note": "대구",
         "status": "scheduled"
     },
     {
